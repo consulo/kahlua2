@@ -30,7 +30,6 @@
         <module name="examples" />
         <module name="interpreter" />
         <module name="j2se" />
-        <module name="javadoc" />
         <module name="testsuite" />
       </profile>
     </annotationProcessing>

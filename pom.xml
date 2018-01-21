@@ -77,7 +77,6 @@
         <module>examples</module>
         <module>interpreter</module>
         <module>j2se</module>
-        <module>javadoc</module>
         <module>testsuite</module>
     </modules>
     <dependencies>

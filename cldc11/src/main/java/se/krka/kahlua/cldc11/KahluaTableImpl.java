@@ -30,7 +30,7 @@ import java.util.Hashtable;
 
 public final class KahluaTableImpl implements KahluaTable {
     private final Hashtable delegate = new Hashtable();
-	private KahluaTable metatable;
+    private KahluaTable metatable;
 
     public void setMetatable(KahluaTable metatable) {
         this.metatable = metatable;
@@ -99,16 +99,16 @@ public final class KahluaTableImpl implements KahluaTable {
         };
     }
 
-	public boolean isEmpty() {
-		return delegate.isEmpty();
-	}
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-	public void wipe() {
-		delegate.clear();
-	}
+    public void wipe() {
+        delegate.clear();
+    }
 
-	public String toString() {
+    public String toString() {
         return "table 0x" + System.identityHashCode(this);
     }
-    
+
 }

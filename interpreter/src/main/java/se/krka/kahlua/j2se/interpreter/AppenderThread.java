@@ -27,57 +27,57 @@ import jsyntaxpane.Lexer;
 import javax.swing.SwingUtilities;
 
 public class AppenderThread {
-	private static final int MIN_RUNTIME = 50;
+    private static final int MIN_RUNTIME = 50;
 
-	private final StringBuilder buffer = new StringBuilder();
-	private final OutputTerminal outputTerminal;
-	private final Lexer lexer;
+    private final StringBuilder buffer = new StringBuilder();
+    private final OutputTerminal outputTerminal;
+    private final Lexer lexer;
 
-	private final Thread worker = new Thread() {
-		@Override
-		public void run() {
-			long runTime = MIN_RUNTIME;
-			try {
-				while (true) {
-					if (buffer.length() > 0) {
-						String text;
-						synchronized (buffer) {
-							text = buffer.toString();
-							buffer.setLength(0);
-						}
-						if (text.length() > 0) {
-							long t1 = System.currentTimeMillis();
-							SyntaxTextAppender appender = new SyntaxTextAppender(outputTerminal, text, lexer);
-							SwingUtilities.invokeLater(appender);
-							appender.await();
-							long t2 = System.currentTimeMillis();
-							runTime = Math.min(MIN_RUNTIME, t2 - t1);
-						}
-					}
-					Thread.sleep(10 * runTime);
-				}
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
-	};
+    private final Thread worker = new Thread() {
+        @Override
+        public void run() {
+            long runTime = MIN_RUNTIME;
+            try {
+                while (true) {
+                    if (buffer.length() > 0) {
+                        String text;
+                        synchronized (buffer) {
+                            text = buffer.toString();
+                            buffer.setLength(0);
+                        }
+                        if (text.length() > 0) {
+                            long t1 = System.currentTimeMillis();
+                            SyntaxTextAppender appender = new SyntaxTextAppender(outputTerminal, text, lexer);
+                            SwingUtilities.invokeLater(appender);
+                            appender.await();
+                            long t2 = System.currentTimeMillis();
+                            runTime = Math.min(MIN_RUNTIME, t2 - t1);
+                        }
+                    }
+                    Thread.sleep(10 * runTime);
+                }
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    };
 
-	public AppenderThread(Lexer lexer, OutputTerminal outputTerminal) {
-		this.lexer = lexer;
-		this.outputTerminal = outputTerminal;
-		worker.setDaemon(true);
-		worker.start();
-	}
+    public AppenderThread(Lexer lexer, OutputTerminal outputTerminal) {
+        this.lexer = lexer;
+        this.outputTerminal = outputTerminal;
+        worker.setDaemon(true);
+        worker.start();
+    }
 
-	public void append(char c) {
-		synchronized (buffer) {
-			buffer.append(c);
-		}
-	}
+    public void append(char c) {
+        synchronized (buffer) {
+            buffer.append(c);
+        }
+    }
 
-	public void append(String s) {
-		synchronized (buffer) {
-			buffer.append(s);
-		}
-	}
+    public void append(String s) {
+        synchronized (buffer) {
+            buffer.append(s);
+        }
+    }
 }

@@ -2,9 +2,11 @@ t1 = {}
 t2 = {}
 t3 = {}
 t4 = {}
-setmetatable(t1, {__newindex = t2})
-setmetatable(t2, {__newindex = function(t,k,v) last_set = v end})
-setmetatable(t3, {__newindex = t4})
+setmetatable(t1, { __newindex = t2 })
+setmetatable(t2, { __newindex = function(t, k, v)
+    last_set = v
+end })
+setmetatable(t3, { __newindex = t4 })
 
 testAssert(last_set == nil)
 t1.key = "x"

@@ -3,50 +3,68 @@ package se.krka.kahlua.vm;
 import java.io.*;
 
 public class KahluaUtil {
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final Object WORKER_THREAD_KEY = new Object();
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_NIL = "nil";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_STRING = "string";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_NUMBER = "number";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_BOOLEAN = "boolean";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_FUNCTION = "function";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_TABLE = "table";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_COROUTINE = "coroutine";
-	/** @exclude */
+    /**
+     * @exclude
+     */
     private static final String TYPE_USERDATA = "userdata";
 
-	public static double fromDouble(Object o) {
-		return ((Double) o).doubleValue();
-	}
+    public static double fromDouble(Object o) {
+        return ((Double) o).doubleValue();
+    }
 
-	public static Double toDouble(double d) {
-		return new Double(d);
-	}
+    public static Double toDouble(double d) {
+        return new Double(d);
+    }
 
-	public static Double toDouble(long d) {
-		return toDouble((double) d);
-	}
+    public static Double toDouble(long d) {
+        return toDouble((double) d);
+    }
 
-	public static Boolean toBoolean(boolean b) {
-		return b ? Boolean.TRUE : Boolean.FALSE;
-	}
+    public static Boolean toBoolean(boolean b) {
+        return b ? Boolean.TRUE : Boolean.FALSE;
+    }
 
-	public static boolean boolEval(Object o) {
-		return (o != null) && (o != Boolean.FALSE);
-	}
+    public static boolean boolEval(Object o) {
+        return (o != null) && (o != Boolean.FALSE);
+    }
 
-	public static LuaClosure loadByteCodeFromResource(String name, KahluaTable environment) {
-		InputStream stream = environment.getClass().getResourceAsStream(name + ".lbc");
-		if(stream == null) {
-		    File file = new File(name + ".lbc");
-		    if(file.exists()) {
+    public static LuaClosure loadByteCodeFromResource(String name, KahluaTable environment) {
+        InputStream stream = environment.getClass().getResourceAsStream(name + ".lbc");
+        if (stream == null) {
+            File file = new File(name + ".lbc");
+            if (file.exists()) {
                 try {
                     stream = new FileInputStream(file);
                 } catch (FileNotFoundException e) {
@@ -55,28 +73,29 @@ public class KahluaUtil {
                 }
             }
         }
-		if (stream == null) {
-			return null;
-		}
-		try {
-			return Prototype.loadByteCode(stream, environment);
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+        if (stream == null) {
+            return null;
+        }
+        try {
+            return Prototype.loadByteCode(stream, environment);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
-	public static void luaAssert(boolean b, String msg) {
-		if (!b) {
-			fail(msg);
-		}
-	}
+    public static void luaAssert(boolean b, String msg) {
+        if (!b) {
+            fail(msg);
+        }
+    }
 
-	public static void fail(String msg) {
-		throw new RuntimeException(msg);
-	}
+    public static void fail(String msg) {
+        throw new RuntimeException(msg);
+    }
 
     /**
      * Rounds towards even numbers
+     *
      * @param x
      */
     public static double round(double x) {
@@ -96,6 +115,7 @@ public class KahluaUtil {
     /**
      * Calculates base^exponent, for non-negative exponents.
      * 0^0 is defined to be 1
+     *
      * @return 1 if exponent is zero or negative
      */
     public static long ipow(long base, int exponent) {
@@ -129,9 +149,9 @@ public class KahluaUtil {
         return (KahluaThread) workerThread;
     }
 
-	public static void setWorkerThread(KahluaTable env, KahluaThread thread) {
-		env.rawset(WORKER_THREAD_KEY, thread);
-	}
+    public static void setWorkerThread(KahluaTable env, KahluaThread thread) {
+        env.rawset(WORKER_THREAD_KEY, thread);
+    }
 
 
     public static KahluaTable getOrCreateTable(Platform platform, KahluaTable env, String name) {
@@ -206,29 +226,29 @@ public class KahluaUtil {
         if (o instanceof Boolean) {
             return o == Boolean.TRUE ? "true" : "false";
         }
-		if (o instanceof LuaClosure) {
-			return "closure 0x" + System.identityHashCode(o);
-		}
-		if (o instanceof JavaFunction) {
-			return "function 0x" + System.identityHashCode(o);
-		}
+        if (o instanceof LuaClosure) {
+            return "closure 0x" + System.identityHashCode(o);
+        }
+        if (o instanceof JavaFunction) {
+            return "function 0x" + System.identityHashCode(o);
+        }
 
-		if (thread != null) {
-			Object tostringFun = thread.getMetaOp(o, "__tostring");
-			if (tostringFun != null) {
-				String res = (String) thread.call(tostringFun, o, null, null);
-				return res;
-			}
-		}
+        if (thread != null) {
+            Object tostringFun = thread.getMetaOp(o, "__tostring");
+            if (tostringFun != null) {
+                String res = (String) thread.call(tostringFun, o, null, null);
+                return res;
+            }
+        }
 
-		return o.toString();
-	}
+        return o.toString();
+    }
 
     public static Double tonumber(String s) {
         return tonumber(s, 10);
     }
 
-    public static Double tonumber(String s, int radix)  {
+    public static Double tonumber(String s, int radix) {
         if (radix < 2 || radix > 36) {
             throw new RuntimeException("base out of range");
         }
@@ -274,61 +294,61 @@ public class KahluaUtil {
         return null;
     }
 
-	public static String getStringArg(LuaCallFrame callFrame, int n, String function) {
-		Object o = getArg(callFrame, n, function);
-		String res = rawTostring(o);
-		if (res == null) {
-			fail(n, function, "string", type(res));
-		}
-		return res;
-	}
+    public static String getStringArg(LuaCallFrame callFrame, int n, String function) {
+        Object o = getArg(callFrame, n, function);
+        String res = rawTostring(o);
+        if (res == null) {
+            fail(n, function, "string", type(res));
+        }
+        return res;
+    }
 
-	public static String getOptionalStringArg(LuaCallFrame callFrame, int n) {
-		Object o = getOptionalArg(callFrame, n);
-		return rawTostring(o);
-	}
+    public static String getOptionalStringArg(LuaCallFrame callFrame, int n) {
+        Object o = getOptionalArg(callFrame, n);
+        return rawTostring(o);
+    }
 
-	public static Double getNumberArg(LuaCallFrame callFrame, int n, String function) {
-		Object o = getArg(callFrame, n, function);
-		Double res = rawTonumber(o);
-		if (res == null) {
-			fail(n, function, "double", type(res));
-		}
-		return res;
-	}
+    public static Double getNumberArg(LuaCallFrame callFrame, int n, String function) {
+        Object o = getArg(callFrame, n, function);
+        Double res = rawTonumber(o);
+        if (res == null) {
+            fail(n, function, "double", type(res));
+        }
+        return res;
+    }
 
-	public static Double getOptionalNumberArg(LuaCallFrame callFrame, int n) {
-		Object o = getOptionalArg(callFrame, n);
-		return rawTonumber(o);
-	}
+    public static Double getOptionalNumberArg(LuaCallFrame callFrame, int n) {
+        Object o = getOptionalArg(callFrame, n);
+        return rawTonumber(o);
+    }
 
-	private static void fail(int n, String function, String wantedType, String gotten) {
-		throw new RuntimeException("bad argument #" + n + " to '" + function +
-				"' (" + wantedType + " expected, got " + gotten + ")");
-	}
+    private static void fail(int n, String function, String wantedType, String gotten) {
+        throw new RuntimeException("bad argument #" + n + " to '" + function +
+                "' (" + wantedType + " expected, got " + gotten + ")");
+    }
 
-	public static void assertArgNotNull(Object o, int n, String type, String function) {
-		if (o == null) {
-			fail(n, function, type, "null");
-		}
-	}
+    public static void assertArgNotNull(Object o, int n, String type, String function) {
+        if (o == null) {
+            fail(n, function, type, "null");
+        }
+    }
 
-	public static Object getOptionalArg(LuaCallFrame callFrame, int n) {
-		int top = callFrame.getTop();
-		int index = n - 1;
-		if (index >= top) {
-			return null;
-		}
-		return callFrame.get(n - 1);
-	}
+    public static Object getOptionalArg(LuaCallFrame callFrame, int n) {
+        int top = callFrame.getTop();
+        int index = n - 1;
+        if (index >= top) {
+            return null;
+        }
+        return callFrame.get(n - 1);
+    }
 
-	public static Object getArg(LuaCallFrame callFrame, int n, String function) {
-		Object res = getOptionalArg(callFrame, n);
-		if (res == null) {
-			throw new RuntimeException("missing argument #" + n + "to '" + function + "'");
-		}
-		return res;
-	}
+    public static Object getArg(LuaCallFrame callFrame, int n, String function) {
+        Object res = getOptionalArg(callFrame, n);
+        if (res == null) {
+            throw new RuntimeException("missing argument #" + n + "to '" + function + "'");
+        }
+        return res;
+    }
 
     public static int len(KahluaTable kahluaTable, int low, int high) {
         while (low < high) {
@@ -340,13 +360,13 @@ public class KahluaUtil {
                 low = middle;
             }
         }
-		while (kahluaTable.rawget(low + 1) != null) {
-			low++;
-		}
+        while (kahluaTable.rawget(low + 1) != null) {
+            low++;
+        }
         return low;
     }
 
-	public static double getDoubleArg(LuaCallFrame callFrame, int i, String name) {
-		return getNumberArg(callFrame, i, name).doubleValue();
-	}
+    public static double getDoubleArg(LuaCallFrame callFrame, int i, String name) {
+        return getNumberArg(callFrame, i, name).doubleValue();
+    }
 }

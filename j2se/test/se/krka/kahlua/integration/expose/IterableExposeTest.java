@@ -39,36 +39,36 @@ import static org.junit.Assert.assertTrue;
 
 public class IterableExposeTest {
 
-	@Test
-	public void exposedIterable() throws Exception {
-		Platform platform = J2SEPlatform.getInstance();
-		KahluaTable env = platform.newEnvironment();
-		KahluaConverterManager manager = new KahluaConverterManager();
+    @Test
+    public void exposedIterable() throws Exception {
+        Platform platform = J2SEPlatform.getInstance();
+        KahluaTable env = platform.newEnvironment();
+        KahluaConverterManager manager = new KahluaConverterManager();
 
 
-		LuaJavaClassExposer exposer = new LuaJavaClassExposer(manager, platform, env);
-		exposer.exposeClass(MyIterableClass.class);
-		exposer.exposeGlobalFunctions(new IterableExposer());
+        LuaJavaClassExposer exposer = new LuaJavaClassExposer(manager, platform, env);
+        exposer.exposeClass(MyIterableClass.class);
+        exposer.exposeGlobalFunctions(new IterableExposer());
 
-		LuaClosure closure = LuaCompiler.loadstring("local obj = ...; local ret = \"\" for v in iter(obj) do ret = ret .. v end return ret", null, env);
-		KahluaThread t = KahluaUtil.getWorkerThread(platform, env);
-		LuaCaller caller = new LuaCaller(manager);
-		LuaReturn res = caller.protectedCall(t, closure, new MyIterableClass("one", "two", "three", "four"));
-		assertTrue(res.isSuccess());
-		assertEquals("onetwothreefour", res.get(0));
+        LuaClosure closure = LuaCompiler.loadstring("local obj = ...; local ret = \"\" for v in iter(obj) do ret = ret .. v end return ret", null, env);
+        KahluaThread t = KahluaUtil.getWorkerThread(platform, env);
+        LuaCaller caller = new LuaCaller(manager);
+        LuaReturn res = caller.protectedCall(t, closure, new MyIterableClass("one", "two", "three", "four"));
+        assertTrue(res.isSuccess());
+        assertEquals("onetwothreefour", res.get(0));
 
-	}
+    }
 
-	private class MyIterableClass implements Iterable<String> {
-		private final List<String> args;
+    private class MyIterableClass implements Iterable<String> {
+        private final List<String> args;
 
-		public MyIterableClass(String... args) {
-			this.args = Arrays.asList(args);
-		}
+        public MyIterableClass(String... args) {
+            this.args = Arrays.asList(args);
+        }
 
-		@Override
-		public Iterator<String> iterator() {
-			return args.iterator();
-		}
-	}
+        @Override
+        public Iterator<String> iterator() {
+            return args.iterator();
+        }
+    }
 }

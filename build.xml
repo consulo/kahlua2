@@ -83,7 +83,8 @@
         </javac>
     </target>
     <target name="compile-cldc11" depends="compile-core">
-        <javac destdir="${classes.dir}/cldc11" debug="true" target="1.4" source="1.4" classpathref="cldc11.dependencies">
+        <javac destdir="${classes.dir}/cldc11" debug="true" target="1.4" source="1.4"
+               classpathref="cldc11.dependencies">
             <classpath>
                 <pathelement location="${classes.dir}/core"/>
             </classpath>
@@ -113,7 +114,8 @@
     <target name="annotation-processor-j2se" depends="compile-j2se">
         <delete dir="${build.dir}/annotation-tmp"/>
         <mkdir dir="${build.dir}/annotation-tmp"/>
-        <javac destdir="${build.dir}/annotation-tmp" debug="on" deprecation="on" optimize="on" classpathref="main.classpath">
+        <javac destdir="${build.dir}/annotation-tmp" debug="on" deprecation="on" optimize="on"
+               classpathref="main.classpath">
             <src path="${j2se.src.dir}"/>
             <compilerarg value="-processor"/>
             <compilerarg value="se.krka.kahlua.integration.processor.LuaDebugDataProcessor"/>
@@ -224,7 +226,8 @@
     </target>
     <target name="emma" depends="clean-emma, test-depend" description="Run Emma to get code coverage">
         <property name="test.file" value=""/>
-        <emmajava enabled="true" libclasspathref="emma.lib" classname="Test" classpathref="test.classpath" sort="+class,+method,+name,+block" metrics="method:100,block:90,line:80,class:100">
+        <emmajava enabled="true" libclasspathref="emma.lib" classname="Test" classpathref="test.classpath"
+                  sort="+class,+method,+name,+block" metrics="method:100,block:90,line:80,class:100">
             <arg value="${test.lua.input.dir}"/>
             <arg value="${test.file}"/>
             <filter includes="se.krka.kahlua.*"/>

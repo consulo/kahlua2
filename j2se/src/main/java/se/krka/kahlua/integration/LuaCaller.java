@@ -26,24 +26,24 @@ import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.vm.KahluaThread;
 
 public class LuaCaller {
-	
-	private final KahluaConverterManager converterManager;
 
-	public LuaCaller(KahluaConverterManager converterManager) {
-		this.converterManager = converterManager;
-	}
+    private final KahluaConverterManager converterManager;
 
-	public Object[] pcall(KahluaThread thread, Object functionObject, Object... args) {
-		if (args != null) {
-			for (int i = args.length - 1; i >= 0; i--) {
-				args[i] = converterManager.fromJavaToLua(args[i]);
-			}
-		}
-		Object[] results = thread.pcall(functionObject, args);
-		return results;
-	}
+    public LuaCaller(KahluaConverterManager converterManager) {
+        this.converterManager = converterManager;
+    }
 
-	public LuaReturn protectedCall(KahluaThread thread, Object functionObject, Object... args) {
-		return LuaReturn.createReturn(pcall(thread, functionObject, args));
-	}
+    public Object[] pcall(KahluaThread thread, Object functionObject, Object... args) {
+        if (args != null) {
+            for (int i = args.length - 1; i >= 0; i--) {
+                args[i] = converterManager.fromJavaToLua(args[i]);
+            }
+        }
+        Object[] results = thread.pcall(functionObject, args);
+        return results;
+    }
+
+    public LuaReturn protectedCall(KahluaThread thread, Object functionObject, Object... args) {
+        return LuaReturn.createReturn(pcall(thread, functionObject, args));
+    }
 }

@@ -75,7 +75,7 @@ class VoidLexer implements Lexer {
                     newToken.start + startAt,
                     newToken.length,
                     newToken.pairValue
-                    ));
+            ));
         }
     }
 }

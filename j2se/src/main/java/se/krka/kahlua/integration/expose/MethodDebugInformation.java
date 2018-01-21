@@ -24,7 +24,9 @@ package se.krka.kahlua.integration.expose;
 
 import java.util.List;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class MethodDebugInformation {
     private final String luaName;
     private final boolean isMethod;

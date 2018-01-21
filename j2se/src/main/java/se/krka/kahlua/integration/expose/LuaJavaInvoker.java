@@ -32,7 +32,7 @@ import se.krka.kahlua.vm.LuaCallFrame;
 
 /**
  * This is a JavaFunction that is an adapter for Java methods.
- *
+ * <p>
  * <pre>
  * Various variants:
  *
@@ -48,18 +48,18 @@ import se.krka.kahlua.vm.LuaCallFrame;
  *
  * Varargs or not:
  * ---------------
- * obj:method(a, b, c, [d, e, f]) -> varargs = {d, e, f}; method.invoke(obj, args[1:3] + {varargs}) 
+ * obj:method(a, b, c, [d, e, f]) -> varargs = {d, e, f}; method.invoke(obj, args[1:3] + {varargs})
  * </pre>
  */
 public class LuaJavaInvoker implements JavaFunction {
-	private final LuaJavaClassExposer exposer;
-	private final KahluaConverterManager manager;
-	private final Class<?> clazz;
-	private final String name;
-	private final Caller caller;
+    private final LuaJavaClassExposer exposer;
+    private final KahluaConverterManager manager;
+    private final Class<?> clazz;
+    private final String name;
+    private final Caller caller;
 
-	private final Class<?>[] parameterTypes;
-	private final int numMethodParams;
+    private final Class<?>[] parameterTypes;
+    private final int numMethodParams;
 
     private final Class<?> varargType;
     private final boolean hasSelf;
@@ -68,19 +68,19 @@ public class LuaJavaInvoker implements JavaFunction {
 
 
     public LuaJavaInvoker(LuaJavaClassExposer exposer, KahluaConverterManager manager, Class<?> clazz, String name, Caller caller) {
-		this.exposer = exposer;
-		this.manager = manager;
-		this.clazz = clazz;
-		this.name = name;
-		this.caller = caller;
+        this.exposer = exposer;
+        this.manager = manager;
+        this.clazz = clazz;
+        this.name = name;
+        this.caller = caller;
 
-		this.parameterTypes = caller.getParameterTypes();
+        this.parameterTypes = caller.getParameterTypes();
         this.varargType = caller.getVarargType();
         this.hasSelf = caller.hasSelf();
         this.needsReturnValues = caller.needsMultipleReturnValues();
         this.hasVarargs = caller.hasVararg();
-		this.numMethodParams = parameterTypes.length + toInt(needsReturnValues) + toInt(hasVarargs);
-	}
+        this.numMethodParams = parameterTypes.length + toInt(needsReturnValues) + toInt(hasVarargs);
+    }
 
     private int toInt(boolean b) {
         return b ? 1 : 0;
@@ -104,7 +104,7 @@ public class LuaJavaInvoker implements JavaFunction {
             luaArgCounter++;
         }
 
-		ReturnValues returnValues = new ReturnValues(manager, callFrame);
+        ReturnValues returnValues = new ReturnValues(manager, callFrame);
         methodArguments.setReturnValues(returnValues);
         // Then handle the returnvalues parameter
         if (needsReturnValues) {
@@ -199,44 +199,44 @@ public class LuaJavaInvoker implements JavaFunction {
         return errorMessage;
     }
 
-	private String newError(int i, String message) {
-		int argumentIndex = i + 1;
-		String errorMessage = message + " at argument #" + argumentIndex;
-		String argumentName = getParameterName(i);
-		if (argumentName != null) {
-			errorMessage += ", " + argumentName;
-		}
-		return errorMessage;
-	}
+    private String newError(int i, String message) {
+        int argumentIndex = i + 1;
+        String errorMessage = message + " at argument #" + argumentIndex;
+        String argumentName = getParameterName(i);
+        if (argumentName != null) {
+            errorMessage += ", " + argumentName;
+        }
+        return errorMessage;
+    }
 
-	private String getFunctionSyntax() {
-		MethodDebugInformation methodDebug = getMethodDebugData();
-		if (methodDebug != null) {
-			return methodDebug.getLuaDescription();
-		}
-		return null;
-	}
+    private String getFunctionSyntax() {
+        MethodDebugInformation methodDebug = getMethodDebugData();
+        if (methodDebug != null) {
+            return methodDebug.getLuaDescription();
+        }
+        return null;
+    }
 
 
-	public MethodDebugInformation getMethodDebugData() {
+    public MethodDebugInformation getMethodDebugData() {
         ClassDebugInformation debugInformation = exposer.getDebugdata(clazz);
-		if (debugInformation == null) {
-			return null;
-		}
+        if (debugInformation == null) {
+            return null;
+        }
         return debugInformation.getMethods().get(caller.getDescriptor());
-	}
+    }
 
-	private String getParameterName(int i) {
-		MethodDebugInformation methodDebug = getMethodDebugData();
-		if (methodDebug != null) {
-			return methodDebug.getParameters().get(i).getName();
-		}
-		return null;
-	}
+    private String getParameterName(int i) {
+        MethodDebugInformation methodDebug = getMethodDebugData();
+        if (methodDebug != null) {
+            return methodDebug.getParameters().get(i).getName();
+        }
+        return null;
+    }
 
-	public String toString() {
-		return name;
-	}
+    public String toString() {
+        return name;
+    }
 
     public int getNumMethodParams() {
         return numMethodParams;

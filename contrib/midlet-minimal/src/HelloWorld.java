@@ -30,18 +30,20 @@ import java.io.IOException;
 
 
 public class HelloWorld extends MIDlet implements JavaFunction, Platform {
-	private StringItem stringItem;
+    private StringItem stringItem;
 
     public int call(LuaCallFrame callFrame, int nArguments) {
         stringItem.setText((String) callFrame.get(0));
         return 0;
     }
 
-	protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
-	}
-	protected void pauseApp() {
-	}
-	protected void startApp() throws MIDletStateChangeException {
+    protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
+    }
+
+    protected void pauseApp() {
+    }
+
+    protected void startApp() throws MIDletStateChangeException {
         Form form = new Form("Hello world");
         stringItem = new StringItem("", "");
         form.append(stringItem);
@@ -53,7 +55,7 @@ public class HelloWorld extends MIDlet implements JavaFunction, Platform {
         state.pcall(closure);
 
         Display.getDisplay(this).setCurrent(form);
-	}
+    }
 
     public double pow(double x, double y) {
         return 0;

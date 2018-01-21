@@ -1,16 +1,16 @@
 function testformat(expected, template, ...)
-	local t = {...}
-	testCall("string.format: " .. template, function()
-		local output = string.format(template, unpack(t))
+    local t = { ... }
+    testCall("string.format: " .. template, function()
+        local output = string.format(template, unpack(t))
 
-		local inputs = ""
-		for i = 1, #t do
-			inputs = string.format("%s, %q", inputs, t[i])
-		end
+        local inputs = ""
+        for i = 1, #t do
+            inputs = string.format("%s, %q", inputs, t[i])
+        end
 
-		local msg = string.format("string.format(%q%s) == %q, expected %q", template, inputs, output, expected)
-		assert(output == expected, msg)
-	end)
+        local msg = string.format("string.format(%q%s) == %q, expected %q", template, inputs, output, expected)
+        assert(output == expected, msg)
+    end)
 end
 
 --Testing widths

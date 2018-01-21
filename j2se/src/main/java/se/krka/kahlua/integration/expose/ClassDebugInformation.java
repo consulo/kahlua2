@@ -33,7 +33,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class ClassDebugInformation {
     private final Map<String, MethodDebugInformation> methods = new HashMap<String, MethodDebugInformation>();
 

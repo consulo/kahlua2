@@ -22,78 +22,90 @@
 
 package se.krka.kahlua.converter;
 
-public class KahluaNumberConverter {	
-	private KahluaNumberConverter() {
-	}
+public class KahluaNumberConverter {
+    private KahluaNumberConverter() {
+    }
 
     public static void install(KahluaConverterManager manager) {
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Long>() {
-			public Long fromLuaToJava(Double luaObject, Class<Long> javaClass) {
-				return new Long(luaObject.longValue());
-			}
-			public Class<Long> getJavaType() {
-				return Long.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Integer>() {
-			public Integer fromLuaToJava(Double luaObject, Class<Integer> javaClass) {
-				return new Integer(luaObject.intValue());
-			}
-			public Class<Integer> getJavaType() {
-				return Integer.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Float>() {
-			public Float fromLuaToJava(Double luaObject, Class<Float> javaClass) {
-				return new Float(luaObject.floatValue());
-			}
-			public Class<Float> getJavaType() {
-				return Float.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Byte>() {
-			public Byte fromLuaToJava(Double luaObject, Class<Byte> javaClass) {
-				return new Byte(luaObject.byteValue());
-			}
-			public Class<Byte> getJavaType() {
-				return Byte.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Character>() {
-			public Character fromLuaToJava(Double luaObject, Class<Character> javaClass) {
-				return new Character((char) luaObject.intValue());
-			}
-			public Class<Character> getJavaType() {
-				return Character.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<Double, Short>() {
-			public Short fromLuaToJava(Double luaObject, Class<Short> javaClass) {
-				return new Short(luaObject.shortValue());
-			}
-			public Class<Short> getJavaType() {
-				return Short.class;
-			}
-			public Class<Double> getLuaType() {
-				return Double.class;
-			}
-		});
-		manager.addJavaConverter(new NumberToLuaConverter(Double.class));
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Long>() {
+            public Long fromLuaToJava(Double luaObject, Class<Long> javaClass) {
+                return new Long(luaObject.longValue());
+            }
+
+            public Class<Long> getJavaType() {
+                return Long.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Integer>() {
+            public Integer fromLuaToJava(Double luaObject, Class<Integer> javaClass) {
+                return new Integer(luaObject.intValue());
+            }
+
+            public Class<Integer> getJavaType() {
+                return Integer.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Float>() {
+            public Float fromLuaToJava(Double luaObject, Class<Float> javaClass) {
+                return new Float(luaObject.floatValue());
+            }
+
+            public Class<Float> getJavaType() {
+                return Float.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Byte>() {
+            public Byte fromLuaToJava(Double luaObject, Class<Byte> javaClass) {
+                return new Byte(luaObject.byteValue());
+            }
+
+            public Class<Byte> getJavaType() {
+                return Byte.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Character>() {
+            public Character fromLuaToJava(Double luaObject, Class<Character> javaClass) {
+                return new Character((char) luaObject.intValue());
+            }
+
+            public Class<Character> getJavaType() {
+                return Character.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<Double, Short>() {
+            public Short fromLuaToJava(Double luaObject, Class<Short> javaClass) {
+                return new Short(luaObject.shortValue());
+            }
+
+            public Class<Short> getJavaType() {
+                return Short.class;
+            }
+
+            public Class<Double> getLuaType() {
+                return Double.class;
+            }
+        });
+        manager.addJavaConverter(new NumberToLuaConverter(Double.class));
         manager.addJavaConverter(new NumberToLuaConverter(Float.class));
         manager.addJavaConverter(new NumberToLuaConverter(Integer.class));
         manager.addJavaConverter(new NumberToLuaConverter(Long.class));
@@ -108,16 +120,16 @@ public class KahluaNumberConverter {
         manager.addJavaConverter(new NumberToLuaConverter(byte.class));
         manager.addJavaConverter(new NumberToLuaConverter(char.class));
 
-		manager.addJavaConverter(new JavaToLuaConverter<Boolean>() {
-			public Object fromJavaToLua(Boolean javaObject) {
-				return Boolean.valueOf(javaObject.booleanValue());
-			}
+        manager.addJavaConverter(new JavaToLuaConverter<Boolean>() {
+            public Object fromJavaToLua(Boolean javaObject) {
+                return Boolean.valueOf(javaObject.booleanValue());
+            }
 
-			public Class<Boolean> getJavaType() {
-				return Boolean.class;
-			}
-		});
-	}
+            public Class<Boolean> getJavaType() {
+                return Boolean.class;
+            }
+        });
+    }
 
     private static class NumberToLuaConverter<T extends Number> implements JavaToLuaConverter<T> {
         private final Class<T> clazz;

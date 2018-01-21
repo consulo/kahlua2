@@ -43,7 +43,7 @@ public class CompletionItem implements Comparable<CompletionItem> {
         int runningIndex = 0;
         for (int pos = 0; pos < lowerInput.length(); pos++) {
             char realC = userInput.charAt(pos);
-            
+
             int index;
             if (Character.isUpperCase(realC)) {
                 index = text.indexOf(realC, runningIndex);

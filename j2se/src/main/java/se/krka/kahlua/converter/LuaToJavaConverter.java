@@ -23,9 +23,10 @@
 package se.krka.kahlua.converter;
 
 public interface LuaToJavaConverter<LuaType, JavaType> {
-	
-	Class<LuaType> getLuaType();
-	Class<JavaType> getJavaType();
-	
-	JavaType fromLuaToJava(LuaType luaObject, Class<JavaType> javaClass);
+
+    Class<LuaType> getLuaType();
+
+    Class<JavaType> getJavaType();
+
+    JavaType fromLuaToJava(LuaType luaObject, Class<JavaType> javaClass);
 }

@@ -37,90 +37,91 @@ import java.util.Collections;
 import java.util.List;
 
 public class StringFormatTest {
-	static interface Runner {
-		String run(String format, Double x, Double y);
-		String name();
-	}
+    static interface Runner {
+        String run(String format, Double x, Double y);
 
-	static class JavaRunner implements Runner {
+        String name();
+    }
 
-		@Override
-		public String run(String format, Double x, Double y) {
-			return String.format(format, x, y);
-		}
+    static class JavaRunner implements Runner {
 
-		@Override
-		public String name() {
-			return "Java String.format";
-		}
-	}
+        @Override
+        public String run(String format, Double x, Double y) {
+            return String.format(format, x, y);
+        }
 
-	static class LuaRunner implements Runner {
-		private final KahluaThread thread;
-		private final LuaClosure closure;
+        @Override
+        public String name() {
+            return "Java String.format";
+        }
+    }
 
-		public LuaRunner(KahluaThread thread, LuaClosure closure) {
-			this.thread = thread;
-			this.closure = closure;
-		}
+    static class LuaRunner implements Runner {
+        private final KahluaThread thread;
+        private final LuaClosure closure;
 
-		@Override
-		public String run(String format, Double x, Double y) {
-			return (String) thread.call(closure, format, x, y);
-		}
+        public LuaRunner(KahluaThread thread, LuaClosure closure) {
+            this.thread = thread;
+            this.closure = closure;
+        }
 
-		@Override
-		public String name() {
-			return "Lua string.format";
-		}
-	}
+        @Override
+        public String run(String format, Double x, Double y) {
+            return (String) thread.call(closure, format, x, y);
+        }
 
-	@Test
-	@Ignore
-	public void testFormat() throws IOException {
-		String format = "Hello %3.2f world %13.2f";
-		Double x = 123.0;
-		Double y = 456.0;
+        @Override
+        public String name() {
+            return "Lua string.format";
+        }
+    }
+
+    @Test
+    @Ignore
+    public void testFormat() throws IOException {
+        String format = "Hello %3.2f world %13.2f";
+        Double x = 123.0;
+        Double y = 456.0;
 
 
-		Platform platform = new J2SEPlatform();
-		KahluaTable env = platform.newEnvironment();
-		KahluaThread thread = new KahluaThread(platform, env);
-		LuaClosure closure1 = LuaCompiler.loadstring("" +
-				"local stringformat = string.format;" +
-				"return function(format, x, y)" +
-				"return stringformat(format, x, y)" +
-				"end", null, env);
-		LuaClosure closure = (LuaClosure) thread.call(closure1, null, null, null);
+        Platform platform = new J2SEPlatform();
+        KahluaTable env = platform.newEnvironment();
+        KahluaThread thread = new KahluaThread(platform, env);
+        LuaClosure closure1 = LuaCompiler.loadstring("" +
+                "local stringformat = string.format;" +
+                "return function(format, x, y)" +
+                "return stringformat(format, x, y)" +
+                "end", null, env);
+        LuaClosure closure = (LuaClosure) thread.call(closure1, null, null, null);
 
-		Runner luaRunner = new LuaRunner(thread, closure);
-		Runner javaRunner = new JavaRunner();
+        Runner luaRunner = new LuaRunner(thread, closure);
+        Runner javaRunner = new JavaRunner();
 
-		List<Runner> list = new ArrayList<Runner>();
-		for (int i = 0; i < 20; i++) {
-			list.add(luaRunner);
-			list.add(javaRunner);
-		}
-		Collections.shuffle(list);
+        List<Runner> list = new ArrayList<Runner>();
+        for (int i = 0; i < 20; i++) {
+            list.add(luaRunner);
+            list.add(javaRunner);
+        }
+        Collections.shuffle(list);
 
-		for (Runner runner : list) {
-			int count = 0;
-			long t1 = System.currentTimeMillis();
-			long t2;
+        for (Runner runner : list) {
+            int count = 0;
+            long t1 = System.currentTimeMillis();
+            long t2;
 
-			while (true) {
-				t2 = System.currentTimeMillis();
-				if (t2 - t1 > 1000) {
-					break;
-				}
-				runner.run(format, x, y);
-				count++;
-			}
-			double performance = (double) count / (t2 - t1);
-			System.out.println(String.format(
-					"%30s %10.2f invocations/ms",
-					runner.name(),
-					performance));
-		}
-	}
+            while (true) {
+                t2 = System.currentTimeMillis();
+                if (t2 - t1 > 1000) {
+                    break;
+                }
+                runner.run(format, x, y);
+                count++;
+            }
+            double performance = (double) count / (t2 - t1);
+            System.out.println(String.format(
+                    "%30s %10.2f invocations/ms",
+                    runner.name(),
+                    performance));
+        }
+    }
 }

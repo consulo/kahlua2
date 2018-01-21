@@ -22,7 +22,9 @@
 
 package se.krka.kahlua.integration.expose;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class MethodParameter {
     private final String name;
     private final String type;

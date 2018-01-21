@@ -56,7 +56,9 @@
                     <execution>
                         <id>uberjar</id>
                         <phase>package</phase>
-                        <goals><goal>single</goal></goals>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                         <configuration>
                             <outputDirectory>${project.basedir}/prod</outputDirectory>
                             <descriptors>

@@ -35,111 +35,111 @@ import se.krka.kahlua.integration.processor.MethodParameterInformation;
 
 public class DokuWikiPrinter {
 
-	private final ApiInformation information;
-	private final PrintWriter writer;
+    private final ApiInformation information;
+    private final PrintWriter writer;
 
-	public DokuWikiPrinter(File output, ApiInformation information) throws IOException {
-		this(new FileWriter(output), information);
-	}
+    public DokuWikiPrinter(File output, ApiInformation information) throws IOException {
+        this(new FileWriter(output), information);
+    }
 
-	public DokuWikiPrinter(Writer writer, ApiInformation information) {
-		this.information = information;
-		this.writer = new PrintWriter(writer);
-	}
+    public DokuWikiPrinter(Writer writer, ApiInformation information) {
+        this.information = information;
+        this.writer = new PrintWriter(writer);
+    }
 
-	public void process() {
-		printClassHierarchy();
-		printFunctions();
-		writer.close();
-	}
+    public void process() {
+        printClassHierarchy();
+        printFunctions();
+        writer.close();
+    }
 
-	private void printFunctions() {
-		writer.println("====== Global functions ======");
-		List<Class<?>> classes = information.getAllClasses();
-		for (Class<?> clazz: classes) {
-			printClassFunctions(clazz);
-		}
-	}
+    private void printFunctions() {
+        writer.println("====== Global functions ======");
+        List<Class<?>> classes = information.getAllClasses();
+        for (Class<?> clazz : classes) {
+            printClassFunctions(clazz);
+        }
+    }
 
-	private void printClassFunctions(Class<?> clazz) {
-		List<MethodDebugInformation> functionsForClass = information.getFunctionsForClass(clazz);
-		if (functionsForClass.size() > 0) {
-			writer.printf("===== %s ====\n", clazz.getSimpleName());
-			writer.printf("In package: %s\n", clazz.getPackage().getName());
-			for (MethodDebugInformation methodInfo: functionsForClass) {
-				printFunction(methodInfo, "====");				
-			}
-			writer.printf("\n----\n\n");
-		}
-	}
+    private void printClassFunctions(Class<?> clazz) {
+        List<MethodDebugInformation> functionsForClass = information.getFunctionsForClass(clazz);
+        if (functionsForClass.size() > 0) {
+            writer.printf("===== %s ====\n", clazz.getSimpleName());
+            writer.printf("In package: %s\n", clazz.getPackage().getName());
+            for (MethodDebugInformation methodInfo : functionsForClass) {
+                printFunction(methodInfo, "====");
+            }
+            writer.printf("\n----\n\n");
+        }
+    }
 
-	private void printFunction(MethodDebugInformation methodInfo, String heading) {
-		writer.printf("%s %s %s\n", heading, methodInfo.getLuaName(), heading);
-		writer.printf("<code lua>%s</code>\n", methodInfo.getLuaDescription());
+    private void printFunction(MethodDebugInformation methodInfo, String heading) {
+        writer.printf("%s %s %s\n", heading, methodInfo.getLuaName(), heading);
+        writer.printf("<code lua>%s</code>\n", methodInfo.getLuaDescription());
 
         for (MethodParameter parameter : methodInfo.getParameters()) {
-			String name = parameter.getName();
-			String type = parameter.getType();
-			String description = parameter.getDescription();
-			if (description == null) {
-				writer.printf("  - **''%s''** ''%s''\n", type, name);
-			} else {
-				writer.printf("  - **''%s''** ''%s'': %s\n", type, name, description);
-			}
-		}
-		String returnDescription = methodInfo.getReturnDescription();
-		if (returnDescription == null) {
-			writer.printf("  * returns ''%s''\n", methodInfo.getReturnType());
-		} else {
-			writer.printf("  * returns ''%s'': %s\n", methodInfo.getReturnType(), returnDescription);
-		}
-	}
+            String name = parameter.getName();
+            String type = parameter.getType();
+            String description = parameter.getDescription();
+            if (description == null) {
+                writer.printf("  - **''%s''** ''%s''\n", type, name);
+            } else {
+                writer.printf("  - **''%s''** ''%s'': %s\n", type, name, description);
+            }
+        }
+        String returnDescription = methodInfo.getReturnDescription();
+        if (returnDescription == null) {
+            writer.printf("  * returns ''%s''\n", methodInfo.getReturnType());
+        } else {
+            writer.printf("  * returns ''%s'': %s\n", methodInfo.getReturnType(), returnDescription);
+        }
+    }
 
-	private void printClassHierarchy() {
-		writer.println("====== Class hierarchy ======");
-		List<Class<?>> roots = information.getRootClasses();
-		for (Class<?> root: roots) {
-			printClassHierarchy(root, null);
-		}
-	}
+    private void printClassHierarchy() {
+        writer.println("====== Class hierarchy ======");
+        List<Class<?>> roots = information.getRootClasses();
+        for (Class<?> root : roots) {
+            printClassHierarchy(root, null);
+        }
+    }
 
-	private void printClassHierarchy(Class<?> clazz, Class<?> parent) {
-		List<Class<?>> children = information.getChildrenForClass(clazz);
-		List<MethodDebugInformation> methodsForClass = information.getMethodsForClass(clazz);
-		if (children.size() > 0 || methodsForClass.size() > 0 || parent != null) {
-			writer.printf("===== %s =====\n", clazz.getSimpleName());
-			writer.printf("In package: ''%s''\n", clazz.getPackage().getName());
-			if (parent != null) {
-				writer.printf("\nSubclass of [[#%s|%s]]\n", parent.getSimpleName(), parent.getSimpleName());
-			}
-			if (children.size() > 0) {
-				writer.printf("\nChildren: ");
-				boolean needsComma = false;
-				for (Class<?> child: children) {
-					if (needsComma) {
-						writer.print(", ");
-					} else {
-						needsComma = true;
-					}
-					writer.printf("[[#%s|%s]]", child.getSimpleName(), child.getSimpleName());
-				}
-			}
-			printMethods(clazz);
-			writer.printf("\n----\n\n");
-			for (Class<?> child: children) {
-				printClassHierarchy(child, clazz);
-			}
-		}
-	}
+    private void printClassHierarchy(Class<?> clazz, Class<?> parent) {
+        List<Class<?>> children = information.getChildrenForClass(clazz);
+        List<MethodDebugInformation> methodsForClass = information.getMethodsForClass(clazz);
+        if (children.size() > 0 || methodsForClass.size() > 0 || parent != null) {
+            writer.printf("===== %s =====\n", clazz.getSimpleName());
+            writer.printf("In package: ''%s''\n", clazz.getPackage().getName());
+            if (parent != null) {
+                writer.printf("\nSubclass of [[#%s|%s]]\n", parent.getSimpleName(), parent.getSimpleName());
+            }
+            if (children.size() > 0) {
+                writer.printf("\nChildren: ");
+                boolean needsComma = false;
+                for (Class<?> child : children) {
+                    if (needsComma) {
+                        writer.print(", ");
+                    } else {
+                        needsComma = true;
+                    }
+                    writer.printf("[[#%s|%s]]", child.getSimpleName(), child.getSimpleName());
+                }
+            }
+            printMethods(clazz);
+            writer.printf("\n----\n\n");
+            for (Class<?> child : children) {
+                printClassHierarchy(child, clazz);
+            }
+        }
+    }
 
-	private void printMethods(Class<?> clazz) {
-		List<MethodDebugInformation> methodsForClass = information.getMethodsForClass(clazz);
-		if (methodsForClass.size() > 0) {
-			//writer.printf("==== Methods ====\n");
-			for (MethodDebugInformation methodInfo: methodsForClass) {
-				printFunction(methodInfo, "====");
-			}
-		}
-	}
+    private void printMethods(Class<?> clazz) {
+        List<MethodDebugInformation> methodsForClass = information.getMethodsForClass(clazz);
+        if (methodsForClass.size() > 0) {
+            //writer.printf("==== Methods ====\n");
+            for (MethodDebugInformation methodInfo : methodsForClass) {
+                printFunction(methodInfo, "====");
+            }
+        }
+    }
 
 }

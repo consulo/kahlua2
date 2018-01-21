@@ -24,32 +24,35 @@ package se.krka.kahlua.integration.expose.caller;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import se.krka.kahlua.integration.expose.ReturnValues;
 import se.krka.kahlua.integration.processor.DescriptorUtil;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class ConstructorCaller extends AbstractCaller {
 
-	private final Constructor<?> constructor;
+    private final Constructor<?> constructor;
 
-	public ConstructorCaller(Constructor<?> constructor) {
+    public ConstructorCaller(Constructor<?> constructor) {
         super(constructor.getParameterTypes());
-		this.constructor = constructor;
+        this.constructor = constructor;
         constructor.setAccessible(true);
         if (needsMultipleReturnValues()) {
             throw new RuntimeException("Constructor can not return multiple values");
         }
-	}
-	
-	@Override
-	public void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        rv.push(constructor.newInstance(params));
-	}
+    }
 
-	@Override
-	public boolean hasSelf() {
-		return false;
-	}
+    @Override
+    public void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        rv.push(constructor.newInstance(params));
+    }
+
+    @Override
+    public boolean hasSelf() {
+        return false;
+    }
 
     @Override
     public String getDescriptor() {

@@ -34,53 +34,53 @@ import static org.junit.Assert.assertEquals;
 
 public class CoroutineTest {
 
-	@org.junit.Test
-	public void testResume() throws IOException {
-		Platform platform = new J2SEPlatform();
-		KahluaTable env = platform.newEnvironment();
-		KahluaThread t = new KahluaThread(platform, env);
+    @org.junit.Test
+    public void testResume() throws IOException {
+        Platform platform = new J2SEPlatform();
+        KahluaTable env = platform.newEnvironment();
+        KahluaThread t = new KahluaThread(platform, env);
 
-		LuaClosure setup = LuaCompiler.loadstring("c = coroutine.create(function() return 1, 2, 3 end)", null, env);
-		t.call(setup, null);
-		LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
-		Object res = t.call(resume, null);
-		assertEquals(Boolean.TRUE, res);		
-	}
+        LuaClosure setup = LuaCompiler.loadstring("c = coroutine.create(function() return 1, 2, 3 end)", null, env);
+        t.call(setup, null);
+        LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
+        Object res = t.call(resume, null);
+        assertEquals(Boolean.TRUE, res);
+    }
 
-	@org.junit.Test
-	public void testResume2() throws IOException {
-		Platform platform = new J2SEPlatform();
-		KahluaTable env = platform.newEnvironment();
-		KahluaThread t = new KahluaThread(platform, env);
+    @org.junit.Test
+    public void testResume2() throws IOException {
+        Platform platform = new J2SEPlatform();
+        KahluaTable env = platform.newEnvironment();
+        KahluaThread t = new KahluaThread(platform, env);
 
-		LuaClosure setup = LuaCompiler.loadstring(
-				"local cc = coroutine.create\n" +
-				"local cy = coroutine.yield\n" +
-				"c = cc(function() while true do cy() end end)", null, env);
-		t.call(setup, null);
-		LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
-		for (int i = 0; i < 100; i++) {
-			Object res = t.call(resume, null);
-			assertEquals(Boolean.TRUE, res);
-		}
-	}
+        LuaClosure setup = LuaCompiler.loadstring(
+                "local cc = coroutine.create\n" +
+                        "local cy = coroutine.yield\n" +
+                        "c = cc(function() while true do cy() end end)", null, env);
+        t.call(setup, null);
+        LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
+        for (int i = 0; i < 100; i++) {
+            Object res = t.call(resume, null);
+            assertEquals(Boolean.TRUE, res);
+        }
+    }
 
-	@org.junit.Test
-	public void testResume3() throws IOException {
-		Platform platform = new J2SEPlatform();
-		KahluaTable env = platform.newEnvironment();
-		KahluaThread t = new KahluaThread(platform, env);
+    @org.junit.Test
+    public void testResume3() throws IOException {
+        Platform platform = new J2SEPlatform();
+        KahluaTable env = platform.newEnvironment();
+        KahluaThread t = new KahluaThread(platform, env);
 
-		LuaClosure setup = LuaCompiler.loadstring(
-				"local cc = coroutine.create\n" +
-				"local cy = coroutine.yield\n" +
-				"c = cc(function() while true do cy() end end)", null, env);
-		t.call(setup, null);
-		LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
-		for (int i = 0; i < 100; i++) {
-			Object res = t.call(resume, null);
-			assertEquals(Boolean.TRUE, res);
-		}
-	}
+        LuaClosure setup = LuaCompiler.loadstring(
+                "local cc = coroutine.create\n" +
+                        "local cy = coroutine.yield\n" +
+                        "c = cc(function() while true do cy() end end)", null, env);
+        t.call(setup, null);
+        LuaClosure resume = LuaCompiler.loadstring("return coroutine.resume(c)", null, env);
+        for (int i = 0; i < 100; i++) {
+            Object res = t.call(resume, null);
+            assertEquals(Boolean.TRUE, res);
+        }
+    }
 
 }

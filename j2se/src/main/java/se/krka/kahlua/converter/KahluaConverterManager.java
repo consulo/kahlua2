@@ -27,49 +27,50 @@ import java.util.Map;
 
 public class KahluaConverterManager {
 
-	@SuppressWarnings("unchecked")
-	private static final Map<Class, Class> PRIMITIVE_CLASS = new HashMap<Class, Class>();
-	static {
-		PRIMITIVE_CLASS.put(boolean.class, Boolean.class);
-		PRIMITIVE_CLASS.put(byte.class, Byte.class);
-		PRIMITIVE_CLASS.put(char.class, Character.class);
-		PRIMITIVE_CLASS.put(short.class, short.class);
-		PRIMITIVE_CLASS.put(int.class, Integer.class);
-		PRIMITIVE_CLASS.put(long.class, Long.class);
-		PRIMITIVE_CLASS.put(float.class, Float.class);
-		PRIMITIVE_CLASS.put(double.class, Double.class);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static final Map<Class, LuaToJavaConverter> LUA_NULL_MAP = new HashMap<Class, LuaToJavaConverter>();
-	@SuppressWarnings("unchecked")
-	private final Map<Class, Map<Class, LuaToJavaConverter>> luaToJava = new HashMap<Class, Map<Class,LuaToJavaConverter>>();
-	@SuppressWarnings("unchecked")
-	private final Map<Class, Map<Class, LuaToJavaConverter>> luatoJavaCache = new HashMap<Class, Map<Class,LuaToJavaConverter>>();
+    @SuppressWarnings("unchecked")
+    private static final Map<Class, Class> PRIMITIVE_CLASS = new HashMap<Class, Class>();
 
-
-	@SuppressWarnings("unchecked")
-	private static final JavaToLuaConverter NULL_CONVERTER = new JavaToLuaConverter<Object>() {
-		public Object fromJavaToLua(Object javaObject) {
-			return null;
-		}
-
-		public Class<Object> getJavaType() {
-			return Object.class;
-		}
-		
-	};
-	@SuppressWarnings("unchecked")
-	private final Map<Class, JavaToLuaConverter> javaToLua = new HashMap<Class, JavaToLuaConverter>();
-	@SuppressWarnings("unchecked")
-	private final Map<Class, JavaToLuaConverter> javaToLuaCache = new HashMap<Class, JavaToLuaConverter>();
-	
-	public KahluaConverterManager() {
-	}
+    static {
+        PRIMITIVE_CLASS.put(boolean.class, Boolean.class);
+        PRIMITIVE_CLASS.put(byte.class, Byte.class);
+        PRIMITIVE_CLASS.put(char.class, Character.class);
+        PRIMITIVE_CLASS.put(short.class, short.class);
+        PRIMITIVE_CLASS.put(int.class, Integer.class);
+        PRIMITIVE_CLASS.put(long.class, Long.class);
+        PRIMITIVE_CLASS.put(float.class, Float.class);
+        PRIMITIVE_CLASS.put(double.class, Double.class);
+    }
 
     @SuppressWarnings("unchecked")
-	public void addLuaConverter(LuaToJavaConverter converter) {
-		Map<Class, LuaToJavaConverter> map = getOrCreate(luaToJava, converter.getLuaType());
+    private static final Map<Class, LuaToJavaConverter> LUA_NULL_MAP = new HashMap<Class, LuaToJavaConverter>();
+    @SuppressWarnings("unchecked")
+    private final Map<Class, Map<Class, LuaToJavaConverter>> luaToJava = new HashMap<Class, Map<Class, LuaToJavaConverter>>();
+    @SuppressWarnings("unchecked")
+    private final Map<Class, Map<Class, LuaToJavaConverter>> luatoJavaCache = new HashMap<Class, Map<Class, LuaToJavaConverter>>();
+
+
+    @SuppressWarnings("unchecked")
+    private static final JavaToLuaConverter NULL_CONVERTER = new JavaToLuaConverter<Object>() {
+        public Object fromJavaToLua(Object javaObject) {
+            return null;
+        }
+
+        public Class<Object> getJavaType() {
+            return Object.class;
+        }
+
+    };
+    @SuppressWarnings("unchecked")
+    private final Map<Class, JavaToLuaConverter> javaToLua = new HashMap<Class, JavaToLuaConverter>();
+    @SuppressWarnings("unchecked")
+    private final Map<Class, JavaToLuaConverter> javaToLuaCache = new HashMap<Class, JavaToLuaConverter>();
+
+    public KahluaConverterManager() {
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addLuaConverter(LuaToJavaConverter converter) {
+        Map<Class, LuaToJavaConverter> map = getOrCreate(luaToJava, converter.getLuaType());
         Class javaType = converter.getJavaType();
         LuaToJavaConverter current = map.get(javaType);
         if (current != null) {
@@ -84,11 +85,11 @@ public class KahluaConverterManager {
         } else {
             map.put(javaType, converter);
         }
-		luatoJavaCache.clear();
-	}
+        luatoJavaCache.clear();
+    }
 
-	@SuppressWarnings("unchecked")
-	public void addJavaConverter(JavaToLuaConverter converter) {
+    @SuppressWarnings("unchecked")
+    public void addJavaConverter(JavaToLuaConverter converter) {
         Class javaType = converter.getJavaType();
         JavaToLuaConverter current = javaToLua.get(javaType);
         if (current != null) {
@@ -104,35 +105,35 @@ public class KahluaConverterManager {
         } else {
             javaToLua.put(javaType, converter);
         }
-		javaToLuaCache.clear();
-	}
+        javaToLuaCache.clear();
+    }
 
-	@SuppressWarnings("unchecked")
-	private Map<Class, LuaToJavaConverter> getOrCreate(Map<Class, Map<Class, LuaToJavaConverter>> luaToJava2, Class luaType) {
-		Map<Class, LuaToJavaConverter> map = luaToJava2.get(luaType);
-		if (map == null) {
-			map = new HashMap<Class, LuaToJavaConverter>();
-			luaToJava2.put(luaType, map);
-		}
-		return map;
-	}
+    @SuppressWarnings("unchecked")
+    private Map<Class, LuaToJavaConverter> getOrCreate(Map<Class, Map<Class, LuaToJavaConverter>> luaToJava2, Class luaType) {
+        Map<Class, LuaToJavaConverter> map = luaToJava2.get(luaType);
+        if (map == null) {
+            map = new HashMap<Class, LuaToJavaConverter>();
+            luaToJava2.put(luaType, map);
+        }
+        return map;
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T fromLuaToJava(Object luaObject, Class<T> javaClass) {
-		if (luaObject == null) {
-			return null;
-		}
-		
-		if (javaClass.isPrimitive()) {
-			javaClass = PRIMITIVE_CLASS.get(javaClass);
-		}
-		
-		if (javaClass.isInstance(luaObject)) {
-			return (T) luaObject;
-		}
-		
-		Class<?> luaClass = luaObject.getClass();
-		Map<Class, LuaToJavaConverter> map = getLuaCache(luaClass);
+    @SuppressWarnings("unchecked")
+    public <T> T fromLuaToJava(Object luaObject, Class<T> javaClass) {
+        if (luaObject == null) {
+            return null;
+        }
+
+        if (javaClass.isPrimitive()) {
+            javaClass = PRIMITIVE_CLASS.get(javaClass);
+        }
+
+        if (javaClass.isInstance(luaObject)) {
+            return (T) luaObject;
+        }
+
+        Class<?> luaClass = luaObject.getClass();
+        Map<Class, LuaToJavaConverter> map = getLuaCache(luaClass);
 
         Class<?> scanClass = javaClass;
         while (scanClass != null) {
@@ -146,7 +147,7 @@ public class KahluaConverterManager {
             scanClass = scanClass.getSuperclass();
         }
         return tryInterfaces(map, javaClass, luaObject);
-	}
+    }
 
     private <T> T tryInterfaces(Map<Class, LuaToJavaConverter> map, Class<T> javaClass, Object luaObject) {
         if (javaClass == null) {
@@ -169,77 +170,77 @@ public class KahluaConverterManager {
     }
 
     @SuppressWarnings("unchecked")
-	private Map<Class, LuaToJavaConverter> createLuaCache(Class<?> luaClass) {
-		HashMap<Class, LuaToJavaConverter> map = new HashMap<Class, LuaToJavaConverter>();
-		luatoJavaCache.put(luaClass, map);
-		
-		map.putAll(getLuaCache(luaClass.getSuperclass()));
-		for (Class clazz: luaClass.getInterfaces()) {
-			map.putAll(getLuaCache(clazz));
-		}
-		Map<Class, LuaToJavaConverter> directMap = luaToJava.get(luaClass);
-		if (directMap != null) {
-			map.putAll(directMap);
-		}
-		
-		return map;
-	}
+    private Map<Class, LuaToJavaConverter> createLuaCache(Class<?> luaClass) {
+        HashMap<Class, LuaToJavaConverter> map = new HashMap<Class, LuaToJavaConverter>();
+        luatoJavaCache.put(luaClass, map);
 
-	@SuppressWarnings("unchecked")
-	private Map<Class, LuaToJavaConverter> getLuaCache(Class<?> clazz) {
-		if (clazz == null) {
-			return LUA_NULL_MAP;
-		}
-		Map<Class, LuaToJavaConverter> map = luatoJavaCache.get(clazz);
-		if (map == null) {
-			map = createLuaCache(clazz);
-		}
-		return map;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Object fromJavaToLua(Object javaObject) {
-		if (javaObject == null) {
-			return null;
-		}
-		Class clazz = javaObject.getClass();
-		JavaToLuaConverter converter = getJavaCache(clazz);
-		try {
-			Object o = converter.fromJavaToLua(javaObject);
-			if (o == null) {
-				return javaObject;
-			}
-			return o;
-		} catch (StackOverflowError e) {
-			throw new RuntimeException("Could not convert " + javaObject + ": it contained recursive elements.");
-		}
-	}
+        map.putAll(getLuaCache(luaClass.getSuperclass()));
+        for (Class clazz : luaClass.getInterfaces()) {
+            map.putAll(getLuaCache(clazz));
+        }
+        Map<Class, LuaToJavaConverter> directMap = luaToJava.get(luaClass);
+        if (directMap != null) {
+            map.putAll(directMap);
+        }
 
-	@SuppressWarnings("unchecked")
-	private JavaToLuaConverter getJavaCache(Class clazz) {
-		if (clazz == null) {
-			return NULL_CONVERTER;
-		}
-		JavaToLuaConverter converter = javaToLuaCache.get(clazz);
-		if (converter == null) {
-			converter = createJavaCache(clazz);
-		}
-		javaToLuaCache.put(clazz, converter);
-		return converter;
-	}
+        return map;
+    }
 
-	@SuppressWarnings("unchecked")
-	private JavaToLuaConverter createJavaCache(Class javaClass) {
-		JavaToLuaConverter converter = javaToLua.get(javaClass);
-		if (converter != null) {
-			return converter;
-		}
-		for (Class clazz: javaClass.getInterfaces()) {
-			converter = getJavaCache(clazz);
-			if (converter != NULL_CONVERTER) {
-				return converter;
-			}
-		}
-		return getJavaCache(javaClass.getSuperclass());
-	}
+    @SuppressWarnings("unchecked")
+    private Map<Class, LuaToJavaConverter> getLuaCache(Class<?> clazz) {
+        if (clazz == null) {
+            return LUA_NULL_MAP;
+        }
+        Map<Class, LuaToJavaConverter> map = luatoJavaCache.get(clazz);
+        if (map == null) {
+            map = createLuaCache(clazz);
+        }
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Object fromJavaToLua(Object javaObject) {
+        if (javaObject == null) {
+            return null;
+        }
+        Class clazz = javaObject.getClass();
+        JavaToLuaConverter converter = getJavaCache(clazz);
+        try {
+            Object o = converter.fromJavaToLua(javaObject);
+            if (o == null) {
+                return javaObject;
+            }
+            return o;
+        } catch (StackOverflowError e) {
+            throw new RuntimeException("Could not convert " + javaObject + ": it contained recursive elements.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private JavaToLuaConverter getJavaCache(Class clazz) {
+        if (clazz == null) {
+            return NULL_CONVERTER;
+        }
+        JavaToLuaConverter converter = javaToLuaCache.get(clazz);
+        if (converter == null) {
+            converter = createJavaCache(clazz);
+        }
+        javaToLuaCache.put(clazz, converter);
+        return converter;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JavaToLuaConverter createJavaCache(Class javaClass) {
+        JavaToLuaConverter converter = javaToLua.get(javaClass);
+        if (converter != null) {
+            return converter;
+        }
+        for (Class clazz : javaClass.getInterfaces()) {
+            converter = getJavaCache(clazz);
+            if (converter != NULL_CONVERTER) {
+                return converter;
+            }
+        }
+        return getJavaCache(javaClass.getSuperclass());
+    }
 }

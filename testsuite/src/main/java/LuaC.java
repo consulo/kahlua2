@@ -34,22 +34,22 @@ import se.krka.kahlua.vm.KahluaTable;
 import se.krka.kahlua.vm.Platform;
 
 public class LuaC {
-	
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		if (args.length < 2) {
-			System.err.println("Not enough arguments");
-			System.err.println("Syntax: java LuaC <input.lua> <output.lbc>");
-			System.exit(1);
-		}
-		
-		File input = new File(args[0]);
-		System.out.println("Input: " + input.getCanonicalPath());
-		File output = new File(args[1]);
-		System.out.println("Output: " + output.getCanonicalPath());
+
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        if (args.length < 2) {
+            System.err.println("Not enough arguments");
+            System.err.println("Syntax: java LuaC <input.lua> <output.lbc>");
+            System.exit(1);
+        }
+
+        File input = new File(args[0]);
+        System.out.println("Input: " + input.getCanonicalPath());
+        File output = new File(args[1]);
+        System.out.println("Output: " + output.getCanonicalPath());
 
         Platform platform = new J2SEPlatform();
-		KahluaTable table = platform.newTable();
-		LuaClosure closure = LuaCompiler.loadis(new FileInputStream(input), input.getName(), table);
-		closure.prototype.dump(new FileOutputStream(output));
-	}
+        KahluaTable table = platform.newTable();
+        LuaClosure closure = LuaCompiler.loadis(new FileInputStream(input), input.getName(), table);
+        closure.prototype.dump(new FileOutputStream(output));
+    }
 }

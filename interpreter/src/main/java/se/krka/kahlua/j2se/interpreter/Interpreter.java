@@ -168,17 +168,17 @@ public class Interpreter extends JPanel {
                     LuaReturn result = caller.protectedCall(thread, luaClosure);
                     if (result.isSuccess()) {
                         for (Object o : result) {
-                            terminal.appendOutput(KahluaUtil.tostring(o, thread)+"\n");
+                            terminal.appendOutput(KahluaUtil.tostring(o, thread) + "\n");
                         }
                     } else {
-                        terminal.appendError(result.getErrorString()+"\n");
-                        terminal.appendError(result.getLuaStackTrace()+"\n");
+                        terminal.appendError(result.getErrorString() + "\n");
+                        terminal.appendError(result.getLuaStackTrace() + "\n");
                         result.getJavaException().printStackTrace(System.err);
                     }
                 } catch (IOException e) {
                     e.printStackTrace(terminal.getPrintStream());
                 } catch (RuntimeException e) {
-                    terminal.appendError(e.getMessage()+"\n");
+                    terminal.appendError(e.getMessage() + "\n");
                 }
                 status.setText("");
             }

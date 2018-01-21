@@ -79,7 +79,7 @@ public class KahluaTableImpl implements KahluaTable {
 
     @Override
     public KahluaTableIterator iterator() {
-        final Iterator<Map.Entry<Object,Object>> iterator = delegate.entrySet().iterator();
+        final Iterator<Map.Entry<Object, Object>> iterator = delegate.entrySet().iterator();
         return new KahluaTableIterator() {
             private Object curKey;
             private Object curValue;
@@ -119,17 +119,17 @@ public class KahluaTableImpl implements KahluaTable {
 
     }
 
-	@Override
-	public boolean isEmpty() {
-		return delegate.isEmpty();
-	}
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-	@Override
-	public void wipe() {
-		delegate.clear();
-	}
+    @Override
+    public void wipe() {
+        delegate.clear();
+    }
 
-	@Override
+    @Override
     public String toString() {
         return "table 0x" + System.identityHashCode(this);
     }

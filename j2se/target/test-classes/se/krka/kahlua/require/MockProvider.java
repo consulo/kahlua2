@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class MockProvider implements LuaSourceProvider {
     private final Map<String, String> sources = new HashMap<String, String>();
+
     public Reader getLuaSource(String path) {
         if (sources.containsKey(path)) {
             return new StringReader(sources.get(path));

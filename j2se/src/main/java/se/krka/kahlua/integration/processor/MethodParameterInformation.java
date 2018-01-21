@@ -28,17 +28,19 @@ import java.util.Collections;
 import java.util.List;
 
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class MethodParameterInformation implements Serializable {
     public static final MethodParameterInformation EMPTY = new MethodParameterInformation(Collections.EMPTY_LIST);
-	private static final long serialVersionUID = -3059552311721486815L;
-	
+    private static final long serialVersionUID = -3059552311721486815L;
+
     private final List<String> parameterNames;
 
-	public MethodParameterInformation(List<String> parameterNames) {
+    public MethodParameterInformation(List<String> parameterNames) {
         this.parameterNames = parameterNames;
     }
-    
+
     public String getName(int index) {
         if (index >= parameterNames.size()) {
             return "arg" + (index + 1);

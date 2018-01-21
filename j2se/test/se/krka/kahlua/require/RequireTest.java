@@ -37,11 +37,11 @@ public class RequireTest {
         assertEquals("Great success\n", outputString);
     }
 
-	public static String setNewLines(String s) {
-		return s.replace("\r\n", "\n");
-	}
+    public static String setNewLines(String s) {
+        return s.replace("\r\n", "\n");
+    }
 
-	@Test
+    @Test
     public void testSourceNotFound() throws IOException {
         MockProvider provider = new MockProvider();
         provider.addSource("/a", "require('/b')\nrequire('/b')");

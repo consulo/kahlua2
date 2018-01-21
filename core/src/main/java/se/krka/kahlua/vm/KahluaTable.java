@@ -23,20 +23,23 @@
 package se.krka.kahlua.vm;
 
 public interface KahluaTable {
-	void setMetatable(KahluaTable metatable);
-	KahluaTable getMetatable();
-	
-	void rawset(Object key, Object value);
-	Object rawget(Object key);
+    void setMetatable(KahluaTable metatable);
 
-	void rawset(int key, Object value);
-	Object rawget(int key);
+    KahluaTable getMetatable();
 
-	int len();
+    void rawset(Object key, Object value);
+
+    Object rawget(Object key);
+
+    void rawset(int key, Object value);
+
+    Object rawget(int key);
+
+    int len();
 
     KahluaTableIterator iterator();
 
-	boolean isEmpty();
+    boolean isEmpty();
 
-	void wipe();
+    void wipe();
 }

@@ -19,16 +19,16 @@ end
 local primegenerator = coroutine.wrap(getprimes)
 
 for i = 1, 1e6, 10 do
-	local s = ""
-	for j = 1, 10 do
-		s = s .. primegenerator()
-		if j < 10 then
-			s = s .. ", "
-		end
-	end
-	local response = query("Primes " .. i .. " to " .. (i + 9) .. ": ", s, "Next 10 primes", "Quit")
-	if response == "Quit" then
-		return
-	end
+    local s = ""
+    for j = 1, 10 do
+        s = s .. primegenerator()
+        if j < 10 then
+            s = s .. ", "
+        end
+    end
+    local response = query("Primes " .. i .. " to " .. (i + 9) .. ": ", s, "Next 10 primes", "Quit")
+    if response == "Quit" then
+        return
+    end
 end
 

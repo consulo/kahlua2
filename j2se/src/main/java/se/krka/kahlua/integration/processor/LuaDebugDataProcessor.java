@@ -36,71 +36,73 @@ import java.util.*;
 import java.util.Map.Entry;
 
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class LuaDebugDataProcessor implements Processor, ElementVisitor<Void, Void> {
 
-	private HashMap<String, ClassParameterInformation> classes;
-	private Filer filer;
+    private HashMap<String, ClassParameterInformation> classes;
+    private Filer filer;
 
-	public Iterable<? extends Completion> getCompletions(Element arg0, AnnotationMirror arg1, ExecutableElement arg2, String arg3) {
-		return new HashSet<Completion>();
-	}
+    public Iterable<? extends Completion> getCompletions(Element arg0, AnnotationMirror arg1, ExecutableElement arg2, String arg3) {
+        return new HashSet<Completion>();
+    }
 
-	public Set<String> getSupportedAnnotationTypes() {
-		HashSet<String> hashSet = new HashSet<String>();
-		hashSet.add(LuaMethod.class.getName());
-		hashSet.add(LuaConstructor.class.getName());
-		return hashSet;
-	}
+    public Set<String> getSupportedAnnotationTypes() {
+        HashSet<String> hashSet = new HashSet<String>();
+        hashSet.add(LuaMethod.class.getName());
+        hashSet.add(LuaConstructor.class.getName());
+        return hashSet;
+    }
 
-	public Set<String> getSupportedOptions() {
-		return new HashSet<String>();
-	}
+    public Set<String> getSupportedOptions() {
+        return new HashSet<String>();
+    }
 
-	public SourceVersion getSupportedSourceVersion() {
-		return SourceVersion.latest();
-	}
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
+    }
 
-	public void init(ProcessingEnvironment arg0) {
-		filer = arg0.getFiler();
-		classes = new HashMap<String, ClassParameterInformation>();
-	}
+    public void init(ProcessingEnvironment arg0) {
+        filer = arg0.getFiler();
+        classes = new HashMap<String, ClassParameterInformation>();
+    }
 
-	public boolean process(Set<? extends TypeElement> arg0, RoundEnvironment arg1) {
-		for (TypeElement t: arg0) {
-			Set<? extends Element> set = arg1.getElementsAnnotatedWith(t);
-			for (Element element: set) {
-				element.accept(this, null);
-			}
-		}
-		
-		if (arg1.processingOver()) {
-			//prettyPrint();
-			try {
-				store();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return true;
-	}
+    public boolean process(Set<? extends TypeElement> arg0, RoundEnvironment arg1) {
+        for (TypeElement t : arg0) {
+            Set<? extends Element> set = arg1.getElementsAnnotatedWith(t);
+            for (Element element : set) {
+                element.accept(this, null);
+            }
+        }
 
-	public Void visit(Element arg0) {
-		return null;
-	}
+        if (arg1.processingOver()) {
+            //prettyPrint();
+            try {
+                store();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
 
-	public Void visit(Element arg0, Void arg1) {
-		return null;
-	}
+    public Void visit(Element arg0) {
+        return null;
+    }
 
-	public Void visitExecutable(ExecutableElement element, Void arg1) {
-		String className = findClass(element);
-		String packageName = findPackage(element);
+    public Void visit(Element arg0, Void arg1) {
+        return null;
+    }
 
-		ClassParameterInformation classParameterInfo = getOrCreate(classes, className, packageName, findSimpleClassName(element));
+    public Void visitExecutable(ExecutableElement element, Void arg1) {
+        String className = findClass(element);
+        String packageName = findPackage(element);
 
-		String methodName = element.getSimpleName().toString();
-		
+        ClassParameterInformation classParameterInfo = getOrCreate(classes, className, packageName, findSimpleClassName(element));
+
+        String methodName = element.getSimpleName().toString();
+
 
         String descriptor = DescriptorUtil.getDescriptor(methodName, element.getParameters());
 
@@ -111,52 +113,52 @@ public class LuaDebugDataProcessor implements Processor, ElementVisitor<Void, Vo
 
         MethodParameterInformation methodInfo = new MethodParameterInformation(parameterInfoList);
 
-		classParameterInfo.methods.put(descriptor, methodInfo);
-		
-		return null;
-	}
+        classParameterInfo.methods.put(descriptor, methodInfo);
 
-	private ClassParameterInformation getOrCreate(HashMap<String, ClassParameterInformation> classes, String className, String packageName, String simpleClassName) {
-		ClassParameterInformation value = classes.get(className);
-		if (value == null) {
-			value = new ClassParameterInformation(packageName, simpleClassName);
-			classes.put(className, value);
-		}
-		return value;
-	}
+        return null;
+    }
 
-	private String findClass(Element arg0) {
-		if (arg0.getKind() == ElementKind.CLASS) {
-			return arg0.toString();
-		}
-		return findClass(arg0.getEnclosingElement());
-	}
+    private ClassParameterInformation getOrCreate(HashMap<String, ClassParameterInformation> classes, String className, String packageName, String simpleClassName) {
+        ClassParameterInformation value = classes.get(className);
+        if (value == null) {
+            value = new ClassParameterInformation(packageName, simpleClassName);
+            classes.put(className, value);
+        }
+        return value;
+    }
 
-	private String findSimpleClassName(Element arg0) {
-		if (arg0.getKind() == ElementKind.CLASS) {
-			String simpleName = arg0.getSimpleName().toString();
-			if (arg0.getEnclosingElement().getKind() == ElementKind.CLASS) {
-				return findSimpleClassName(arg0.getEnclosingElement()) + "_" + simpleName;  
-			}
-			return simpleName;
-		}
-		return findSimpleClassName(arg0.getEnclosingElement());
-	}
+    private String findClass(Element arg0) {
+        if (arg0.getKind() == ElementKind.CLASS) {
+            return arg0.toString();
+        }
+        return findClass(arg0.getEnclosingElement());
+    }
 
-	private String findPackage(Element arg0) {
-		if (arg0.getKind() == ElementKind.PACKAGE) {
-			return arg0.toString();
-		}
-		return findPackage(arg0.getEnclosingElement());
-	}
+    private String findSimpleClassName(Element arg0) {
+        if (arg0.getKind() == ElementKind.CLASS) {
+            String simpleName = arg0.getSimpleName().toString();
+            if (arg0.getEnclosingElement().getKind() == ElementKind.CLASS) {
+                return findSimpleClassName(arg0.getEnclosingElement()) + "_" + simpleName;
+            }
+            return simpleName;
+        }
+        return findSimpleClassName(arg0.getEnclosingElement());
+    }
 
-	public Void visitPackage(PackageElement arg0, Void arg1) {
-		return null;
-	}
+    private String findPackage(Element arg0) {
+        if (arg0.getKind() == ElementKind.PACKAGE) {
+            return arg0.toString();
+        }
+        return findPackage(arg0.getEnclosingElement());
+    }
 
-	public Void visitType(TypeElement arg0, Void arg1) {
-		return null;
-	}
+    public Void visitPackage(PackageElement arg0, Void arg1) {
+        return null;
+    }
+
+    public Void visitType(TypeElement arg0, Void arg1) {
+        return null;
+    }
 
     @Override
     public Void visitVariable(VariableElement e, Void aVoid) {
@@ -165,26 +167,26 @@ public class LuaDebugDataProcessor implements Processor, ElementVisitor<Void, Vo
     }
 
     public Void visitTypeParameter(TypeParameterElement arg0, Void arg1) {
-		return null;
-	}
+        return null;
+    }
 
-	public Void visitUnknown(Element arg0, Void arg1) {
-		return null;
-	}
+    public Void visitUnknown(Element arg0, Void arg1) {
+        return null;
+    }
 
-	private void store() throws IOException {
-		for (Entry<String, ClassParameterInformation> entry: classes.entrySet()) {
-			ClassParameterInformation classParameterInfo = entry.getValue();
-			Element[] elements = null;
-			FileObject fileObject = filer.createResource(
-					StandardLocation.CLASS_OUTPUT,
-					classParameterInfo.getPackageName(),
-					classParameterInfo.getSimpleClassName() + ".luadebugdata",
-					elements);
+    private void store() throws IOException {
+        for (Entry<String, ClassParameterInformation> entry : classes.entrySet()) {
+            ClassParameterInformation classParameterInfo = entry.getValue();
+            Element[] elements = null;
+            FileObject fileObject = filer.createResource(
+                    StandardLocation.CLASS_OUTPUT,
+                    classParameterInfo.getPackageName(),
+                    classParameterInfo.getSimpleClassName() + ".luadebugdata",
+                    elements);
 
-			OutputStream stream = fileObject.openOutputStream();
-			classParameterInfo.saveToStream(stream);
-			stream.close();
-		}
-	}
+            OutputStream stream = fileObject.openOutputStream();
+            classParameterInfo.saveToStream(stream);
+            stream.close();
+        }
+    }
 }

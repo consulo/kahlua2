@@ -8,8 +8,8 @@ testAssert(not not f == f)
 testAssert(t ~= f)
 
 testAssert(t and t)
-testAssert(not(t and f))
-testAssert(not(f and t))
+testAssert(not (t and f))
+testAssert(not (f and t))
 
 testAssert(f or t)
 testAssert(t or f)

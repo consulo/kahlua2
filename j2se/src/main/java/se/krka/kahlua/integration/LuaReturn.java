@@ -25,55 +25,60 @@ package se.krka.kahlua.integration;
 import java.util.AbstractList;
 
 public abstract class LuaReturn extends AbstractList<Object> {
-	/** @exclude */
-	protected final Object[] returnValues;
+    /**
+     * @exclude
+     */
+    protected final Object[] returnValues;
 
-	protected LuaReturn(Object[] returnValues) {
-		this.returnValues = returnValues; 
-	}
+    protected LuaReturn(Object[] returnValues) {
+        this.returnValues = returnValues;
+    }
 
-	public abstract boolean isSuccess();
+    public abstract boolean isSuccess();
 
-	// valid when success == false, otherwise throws some exception
-	public abstract Object getErrorObject();
-	public abstract String getErrorString();
-	public abstract String getLuaStackTrace();
-	public abstract RuntimeException getJavaException();
+    // valid when success == false, otherwise throws some exception
+    public abstract Object getErrorObject();
+
+    public abstract String getErrorString();
+
+    public abstract String getLuaStackTrace();
+
+    public abstract RuntimeException getJavaException();
 
 
-	// valid when success == true, otherwise throws some exception
-	public Object getFirst() {
-		return get(0);
-	}
+    // valid when success == true, otherwise throws some exception
+    public Object getFirst() {
+        return get(0);
+    }
 
-	public Object getSecond() {
-		return get(1);
-	}
+    public Object getSecond() {
+        return get(1);
+    }
 
-	public Object getThird() {
-		return get(2);
-	}
-	
-	@Override
-	public Object get(int index) {
-		int n = size();
-		if (index < 0 || index >= n) {
-			throw new IndexOutOfBoundsException("The index " + index + " is outside the bounds [" + 0 
-					+ ", " + n + ")");
-		}
-		return returnValues[index + 1];
-	}
+    public Object getThird() {
+        return get(2);
+    }
 
-	@Override
-	public int size() {
-		return returnValues.length - 1;
-	}
+    @Override
+    public Object get(int index) {
+        int n = size();
+        if (index < 0 || index >= n) {
+            throw new IndexOutOfBoundsException("The index " + index + " is outside the bounds [" + 0
+                    + ", " + n + ")");
+        }
+        return returnValues[index + 1];
+    }
 
-	public static LuaReturn createReturn(Object[] returnValues) {
-		Boolean success = (Boolean) returnValues[0];
-		if(success) {
-			return new LuaSuccess(returnValues);
-		}
-		return new LuaFail(returnValues);
-	}	
+    @Override
+    public int size() {
+        return returnValues.length - 1;
+    }
+
+    public static LuaReturn createReturn(Object[] returnValues) {
+        Boolean success = (Boolean) returnValues[0];
+        if (success) {
+            return new LuaSuccess(returnValues);
+        }
+        return new LuaFail(returnValues);
+    }
 }

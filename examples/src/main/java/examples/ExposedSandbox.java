@@ -37,54 +37,54 @@ import se.krka.kahlua.vm.LuaClosure;
 import java.io.IOException;
 
 public class ExposedSandbox {
-	private final KahluaConverterManager converterManager = new KahluaConverterManager();
-	private final J2SEPlatform platform = new J2SEPlatform();
-	private final KahluaTable env = platform.newEnvironment();
-	private final KahluaThread thread = new KahluaThread(platform, env);
-	private final LuaCaller caller = new LuaCaller(converterManager);
-	private final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
+    private final KahluaConverterManager converterManager = new KahluaConverterManager();
+    private final J2SEPlatform platform = new J2SEPlatform();
+    private final KahluaTable env = platform.newEnvironment();
+    private final KahluaThread thread = new KahluaThread(platform, env);
+    private final LuaCaller caller = new LuaCaller(converterManager);
+    private final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
 
-	public static void main(String[] args) throws IOException {
-		new ExposedSandbox().run();
-	}
+    public static void main(String[] args) throws IOException {
+        new ExposedSandbox().run();
+    }
 
-	public void run() throws IOException {
-		exposer.exposeClass(Example.class);
-		LuaClosure closure = LuaCompiler.loadstring("local arg1 = ...; print('Greetings ' .. arg1:GetName())", "", env);
-		caller.protectedCall(thread, closure, new Example());
+    public void run() throws IOException {
+        exposer.exposeClass(Example.class);
+        LuaClosure closure = LuaCompiler.loadstring("local arg1 = ...; print('Greetings ' .. arg1:GetName())", "", env);
+        caller.protectedCall(thread, closure, new Example());
 
-		exposer.exposeGlobalFunctions(new GlobalObject());
-		closure = LuaCompiler.loadstring("print('2^3 = ' .. pow3(2))", "", env);
-		caller.protectedCall(thread, closure);
-		closure = LuaCompiler.loadstring("local x, y, z = getCoords('me'); print(string.format('I am at coordinates: %f, %f, %f', x, y, z))", "", env);
-		caller.protectedCall(thread, closure);
+        exposer.exposeGlobalFunctions(new GlobalObject());
+        closure = LuaCompiler.loadstring("print('2^3 = ' .. pow3(2))", "", env);
+        caller.protectedCall(thread, closure);
+        closure = LuaCompiler.loadstring("local x, y, z = getCoords('me'); print(string.format('I am at coordinates: %f, %f, %f', x, y, z))", "", env);
+        caller.protectedCall(thread, closure);
 
-		// The exposer itself holds some interesting functions:
-		exposer.exposeGlobalFunctions(exposer);
-		closure = LuaCompiler.loadstring("print('Definition:');print(definition(getCoords))", "", env);
-		closure = LuaCompiler.loadstring("print('Definition:');print(definition(pow3))", "", env);
-		caller.protectedCall(thread, closure);
+        // The exposer itself holds some interesting functions:
+        exposer.exposeGlobalFunctions(exposer);
+        closure = LuaCompiler.loadstring("print('Definition:');print(definition(getCoords))", "", env);
+        closure = LuaCompiler.loadstring("print('Definition:');print(definition(pow3))", "", env);
+        caller.protectedCall(thread, closure);
 
-	}
+    }
 
-	private static class Example {
-		@LuaMethod(name = "GetName")
-		public String getName() {
-			return "Mr Example";
-		}
-	}
+    private static class Example {
+        @LuaMethod(name = "GetName")
+        public String getName() {
+            return "Mr Example";
+        }
+    }
 
-	private static class GlobalObject {
-		@LuaMethod(name = "pow3", global = true)
-		public double pow3(double x) {
-			return x * x * x;
-		}
+    private static class GlobalObject {
+        @LuaMethod(name = "pow3", global = true)
+        public double pow3(double x) {
+            return x * x * x;
+        }
 
-		@Desc("This method returns the coordinates of the user with the specified name")
-		@LuaMethod(name = "getCoords", global = true)
-		public void getCoords(ReturnValues rv, String name) {
-			rv.push(1.2, 3.4, 5.6);
-		}
+        @Desc("This method returns the coordinates of the user with the specified name")
+        @LuaMethod(name = "getCoords", global = true)
+        public void getCoords(ReturnValues rv, String name) {
+            rv.push(1.2, 3.4, 5.6);
+        }
 
-	}
+    }
 }

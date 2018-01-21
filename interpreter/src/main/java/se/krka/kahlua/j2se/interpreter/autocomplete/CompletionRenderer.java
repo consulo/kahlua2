@@ -55,7 +55,7 @@ public class CompletionRenderer extends JLabel implements ListCellRenderer {
         setForeground(front);
 
         setEnabled(list.isEnabled());
-        setFont(list.getFont());        
+        setFont(list.getFont());
 
         return this;
     }

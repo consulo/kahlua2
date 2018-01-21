@@ -22,24 +22,24 @@ THE SOFTWARE.
 package se.krka.kahlua.vm;
 
 
-
 public interface JavaFunction {
-	/**
-	 * This interface defines functions which the Kahlua engine can call.
-	 *
-	 * General contract:
-	 * <pre>
-	 *  callFrame.get(i) = an argument (0 <= i < nArguments)<br>
-	 * </pre>
-	 * Return (possibly) values to lua by calling:
-	 * <pre>
-	 *  callFrame.push(value1);
-	 *  callFrame.push(value2);
-	 *  return 2; // number of pushed values
-	 * </pre>
-	 * @param callFrame - the frame that contains all the arguments and where all the results should be put.
-	 * @param nArguments - number of function arguments 
-	 * @return N, number of return values. The top N objects on the stack are considered the return values.
-	 */
-	public abstract int call(LuaCallFrame callFrame, int nArguments);
+    /**
+     * This interface defines functions which the Kahlua engine can call.
+     * <p>
+     * General contract:
+     * <pre>
+     *  callFrame.get(i) = an argument (0 <= i < nArguments)<br>
+     * </pre>
+     * Return (possibly) values to lua by calling:
+     * <pre>
+     *  callFrame.push(value1);
+     *  callFrame.push(value2);
+     *  return 2; // number of pushed values
+     * </pre>
+     *
+     * @param callFrame  - the frame that contains all the arguments and where all the results should be put.
+     * @param nArguments - number of function arguments
+     * @return N, number of return values. The top N objects on the stack are considered the return values.
+     */
+    public abstract int call(LuaCallFrame callFrame, int nArguments);
 }

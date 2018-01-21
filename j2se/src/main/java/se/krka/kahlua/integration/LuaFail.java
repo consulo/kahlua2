@@ -25,56 +25,58 @@ package se.krka.kahlua.integration;
 
 import se.krka.kahlua.vm.KahluaUtil;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class LuaFail extends LuaReturn {
-	LuaFail(Object[] returnValues) {
-		super(returnValues);
-	}
+    LuaFail(Object[] returnValues) {
+        super(returnValues);
+    }
 
-	@Override
-	public boolean isSuccess() {
-		return false;
-	}
+    @Override
+    public boolean isSuccess() {
+        return false;
+    }
 
-	@Override
-	public Object getErrorObject() {
-		if (returnValues.length >= 2) {
-			return returnValues[1];
-		}
-		return null;
-	}
+    @Override
+    public Object getErrorObject() {
+        if (returnValues.length >= 2) {
+            return returnValues[1];
+        }
+        return null;
+    }
 
-	@Override
-	public String getErrorString() {
-		if (returnValues.length >= 2 && returnValues[1] != null) {
-			return KahluaUtil.rawTostring(returnValues[1]);
-		}
-		return "";
-	}
+    @Override
+    public String getErrorString() {
+        if (returnValues.length >= 2 && returnValues[1] != null) {
+            return KahluaUtil.rawTostring(returnValues[1]);
+        }
+        return "";
+    }
 
-	@Override
-	public String getLuaStackTrace() {
-		if (returnValues.length >= 3 && returnValues[2] instanceof String) {
-			return (String) returnValues[2];
-		}
-		return "";
-	}
+    @Override
+    public String getLuaStackTrace() {
+        if (returnValues.length >= 3 && returnValues[2] instanceof String) {
+            return (String) returnValues[2];
+        }
+        return "";
+    }
 
-	@Override
-	public RuntimeException getJavaException() {
-		if (returnValues.length >= 4 && returnValues[3] instanceof RuntimeException) {
-			return (RuntimeException) returnValues[3];
-		}
-		return null;
-	}
+    @Override
+    public RuntimeException getJavaException() {
+        if (returnValues.length >= 4 && returnValues[3] instanceof RuntimeException) {
+            return (RuntimeException) returnValues[3];
+        }
+        return null;
+    }
 
-	@Override
-	public int size() {
-		return 0;
-	}
+    @Override
+    public int size() {
+        return 0;
+    }
 
-	@Override
-	public String toString() {
-		return getErrorString() + "\n" + getLuaStackTrace();
-	}
+    @Override
+    public String toString() {
+        return getErrorString() + "\n" + getLuaStackTrace();
+    }
 }

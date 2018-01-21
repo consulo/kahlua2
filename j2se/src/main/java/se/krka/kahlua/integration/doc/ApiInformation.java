@@ -28,9 +28,13 @@ import se.krka.kahlua.integration.processor.MethodParameterInformation;
 import java.util.List;
 
 public interface ApiInformation {
-	public List<Class<?>> getAllClasses();
-	public List<Class<?>> getRootClasses();
-	public List<Class<?>> getChildrenForClass(Class<?> clazz);
-	public List<MethodDebugInformation> getMethodsForClass(Class<?> clazz);
-	public List<MethodDebugInformation> getFunctionsForClass(Class<?> clazz);
+    public List<Class<?>> getAllClasses();
+
+    public List<Class<?>> getRootClasses();
+
+    public List<Class<?>> getChildrenForClass(Class<?> clazz);
+
+    public List<MethodDebugInformation> getMethodsForClass(Class<?> clazz);
+
+    public List<MethodDebugInformation> getFunctionsForClass(Class<?> clazz);
 }

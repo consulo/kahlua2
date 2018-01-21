@@ -3,10 +3,12 @@ package se.krka.kahlua.profiler;
 import java.util.*;
 import java.io.PrintWriter;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class StacktraceNode {
     private final long time;
-	private final StacktraceElement element;
+    private final StacktraceElement element;
     private final List<StacktraceNode> children;
 
     public StacktraceNode(StacktraceElement element, List<StacktraceNode> children, long time) {
@@ -22,11 +24,11 @@ public class StacktraceNode {
                                             int maxChildren) {
 
         StacktraceNode returnValue = new StacktraceNode(element,
-				new ArrayList<StacktraceNode>(),
-				counter.getTime());
+                new ArrayList<StacktraceNode>(),
+                counter.getTime());
 
         if (maxDepth > 0) {
-            Map<StacktraceElement,StacktraceCounter> map = counter.getChildren();
+            Map<StacktraceElement, StacktraceCounter> map = counter.getChildren();
 
             List<Map.Entry<StacktraceElement, StacktraceCounter>> childArray = new ArrayList<Map.Entry<StacktraceElement, StacktraceCounter>>(map.entrySet());
             Collections.sort(childArray, new Comparator<Map.Entry<StacktraceElement, StacktraceCounter>>() {

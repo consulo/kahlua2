@@ -24,45 +24,48 @@ package se.krka.kahlua.integration.expose.caller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import se.krka.kahlua.integration.expose.ReturnValues;
 import se.krka.kahlua.integration.processor.DescriptorUtil;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class MethodCaller extends AbstractCaller {
 
-	private final Method method;
-	private final Object owner;
-	private final boolean hasSelf;
+    private final Method method;
+    private final Object owner;
+    private final boolean hasSelf;
     private final boolean hasReturnValue;
 
     public MethodCaller(Method method, Object owner, boolean hasSelf) {
         super(method.getParameterTypes());
-		this.method = method;
-		this.owner = owner;
-		this.hasSelf = hasSelf;
+        this.method = method;
+        this.owner = owner;
+        this.hasSelf = hasSelf;
         method.setAccessible(true);
 
-		hasReturnValue = !method.getReturnType().equals(Void.TYPE);
+        hasReturnValue = !method.getReturnType().equals(Void.TYPE);
         if (hasReturnValue && needsMultipleReturnValues()) {
             throw new IllegalArgumentException("Must have a void return type if first argument is a ReturnValues: got: " + method.getReturnType());
         }
-	}
-	
-	@Override
-	public void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (!hasSelf) {
-			self = owner;
-		}
-		Object ret = method.invoke(self, params);
+    }
+
+    @Override
+    public void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        if (!hasSelf) {
+            self = owner;
+        }
+        Object ret = method.invoke(self, params);
         if (hasReturnValue) {
             rv.push(ret);
-		}
-	}
+        }
+    }
 
-	@Override
-	public boolean hasSelf() {
-		return hasSelf;
-	}
+    @Override
+    public boolean hasSelf() {
+        return hasSelf;
+    }
 
     @Override
     public String getDescriptor() {

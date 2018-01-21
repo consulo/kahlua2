@@ -24,38 +24,38 @@ public class InteractiveShell {
     private final AtomicInteger counter = new AtomicInteger();
     private final ArrayList<InternalInterpreterFrame> interpreters;
     private final JMenuItem exit = new JMenuItem("Exit");
-	private final JFrame frame;
+    private final JFrame frame;
 
-	public static void main(final String[] args) {
-		Kahlua kahlua = new Kahlua();
-		KahluaNumberConverter.install(kahlua.getConverterManager());
-		KahluaEnumConverter.install(kahlua.getConverterManager());
-		new KahluaTableConverter(kahlua.getPlatform()).install(kahlua.getConverterManager());
+    public static void main(final String[] args) {
+        Kahlua kahlua = new Kahlua();
+        KahluaNumberConverter.install(kahlua.getConverterManager());
+        KahluaEnumConverter.install(kahlua.getConverterManager());
+        new KahluaTableConverter(kahlua.getPlatform()).install(kahlua.getConverterManager());
 
-		new InteractiveShell(kahlua);
-	}
+        new InteractiveShell(kahlua);
+    }
 
-	public InteractiveShell(final Kahlua kahlua) {
-		this(kahlua, createFrame());
-		exit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
-	}
+    public InteractiveShell(final Kahlua kahlua) {
+        this(kahlua, createFrame());
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
+    }
 
-	private static JFrame createFrame() {
-		final JFrame frame = new JFrame("Interactive shell");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		return frame;
-	}
+    private static JFrame createFrame() {
+        final JFrame frame = new JFrame("Interactive shell");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        return frame;
+    }
 
-	public InteractiveShell(final Kahlua kahlua, final JFrame frame) {
-		this.frame = frame;
+    public InteractiveShell(final Kahlua kahlua, final JFrame frame) {
+        this.frame = frame;
 
-		KahluaTable staticBase = kahlua.getPlatform().newTable();
-		kahlua.getEnvironment().rawset("Java", staticBase);
+        KahluaTable staticBase = kahlua.getPlatform().newTable();
+        kahlua.getEnvironment().rawset("Java", staticBase);
 
         LuaJavaClassExposer exposer = new LuaJavaClassExposer(kahlua.getConverterManager(), kahlua.getPlatform(), kahlua.getEnvironment(), staticBase);
 
@@ -96,10 +96,10 @@ public class InteractiveShell {
             public void actionPerformed(ActionEvent e) {
                 int size = interpreters.size();
                 int n = (int) Math.ceil(Math.sqrt(size));
-                int m = (int) Math.ceil((double)size / n);
+                int m = (int) Math.ceil((double) size / n);
 
                 if (n == m) {
-                    int waste = n*m - size;
+                    int waste = n * m - size;
                     if (waste > 0) {
                         n = n - 1;
                         m = m + 1;
@@ -181,25 +181,25 @@ public class InteractiveShell {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-		appendWelcome();
-		appendKeybindings();
+        appendWelcome();
+        appendKeybindings();
 
     }
 
 
-	public void appendKeybindings() {
-		getWindow(0).getInterpreter().getTerminal().appendInfo("Useful shortcuts:\n" +
-				"Ctrl-enter -- execute script\n" +
-				"Ctrl-space -- autocomplete global variables\n" +
-				"Ctrl-p -- show definition (if available)\n" +
-				"Ctrl-up/down -- browse input history\n" +
-				""
-		);
-	}
+    public void appendKeybindings() {
+        getWindow(0).getInterpreter().getTerminal().appendInfo("Useful shortcuts:\n" +
+                "Ctrl-enter -- execute script\n" +
+                "Ctrl-space -- autocomplete global variables\n" +
+                "Ctrl-p -- show definition (if available)\n" +
+                "Ctrl-up/down -- browse input history\n" +
+                ""
+        );
+    }
 
-	public void appendWelcome() {
-		getWindow(0).getInterpreter().getTerminal().appendInfo("Welcome to the Kahlua interpreter\n");
-	}
+    public void appendWelcome() {
+        getWindow(0).getInterpreter().getTerminal().appendInfo("Welcome to the Kahlua interpreter\n");
+    }
 
     private static void tile(JDesktopPane mdi,
                              List<InternalInterpreterFrame> interpreters,
@@ -236,7 +236,7 @@ public class InteractiveShell {
         return interpreters.get(index);
     }
 
-	public JMenuItem getExit() {
-		return exit;
-	}
+    public JMenuItem getExit() {
+        return exit;
+    }
 }

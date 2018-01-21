@@ -26,16 +26,20 @@ import se.krka.kahlua.integration.expose.ReturnValues;
 
 import java.lang.reflect.InvocationTargetException;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public interface Caller {
-	void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, InstantiationException;
-	
-	Class<?>[] getParameterTypes();
-	
-	boolean needsMultipleReturnValues();
-	boolean hasSelf();
+    void call(Object self, ReturnValues rv, Object[] params) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, InstantiationException;
+
+    Class<?>[] getParameterTypes();
+
+    boolean needsMultipleReturnValues();
+
+    boolean hasSelf();
 
     Class<?> getVarargType();
+
     boolean hasVararg();
 
     String getDescriptor();

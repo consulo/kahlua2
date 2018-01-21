@@ -29,17 +29,17 @@ import se.krka.kahlua.vm.LuaCallFrame;
 import java.util.Iterator;
 
 public class IterableExposer {
-	@LuaMethod(global = true)
-	public Object iter(Iterable<?> iter) {
-		final Iterator iter2 = iter.iterator();
-		return new JavaFunction() {
-			@Override
-			public int call(LuaCallFrame callFrame, int nArguments) {
-				if (!iter2.hasNext()) {
-					return 0;
-				}
-				return callFrame.push(iter2.next());
-			}
-		};
-	}
+    @LuaMethod(global = true)
+    public Object iter(Iterable<?> iter) {
+        final Iterator iter2 = iter.iterator();
+        return new JavaFunction() {
+            @Override
+            public int call(LuaCallFrame callFrame, int nArguments) {
+                if (!iter2.hasNext()) {
+                    return 0;
+                }
+                return callFrame.push(iter2.next());
+            }
+        };
+    }
 }

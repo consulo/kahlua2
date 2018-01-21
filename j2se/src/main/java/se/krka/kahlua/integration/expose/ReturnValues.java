@@ -26,28 +26,28 @@ import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.vm.LuaCallFrame;
 
 public class ReturnValues {
-	private final KahluaConverterManager manager;
-	private final LuaCallFrame callFrame;
-	private int args;
-	
-	ReturnValues(KahluaConverterManager manager, LuaCallFrame callFrame) {
-		this.manager = manager;
-		this.callFrame = callFrame;
-	}
-	
-	public ReturnValues push(Object obj) {
+    private final KahluaConverterManager manager;
+    private final LuaCallFrame callFrame;
+    private int args;
+
+    ReturnValues(KahluaConverterManager manager, LuaCallFrame callFrame) {
+        this.manager = manager;
+        this.callFrame = callFrame;
+    }
+
+    public ReturnValues push(Object obj) {
         args += callFrame.push(manager.fromJavaToLua(obj));
         return this;
-	}
-	
-	public ReturnValues push(Object... objects) {
-		for (Object o: objects) {
-			push(o);
-		}
-		return this;
-	}
-	
-	int getNArguments() {
-		return args;
-	}
+    }
+
+    public ReturnValues push(Object... objects) {
+        for (Object o : objects) {
+            push(o);
+        }
+        return this;
+    }
+
+    int getNArguments() {
+        return args;
+    }
 }

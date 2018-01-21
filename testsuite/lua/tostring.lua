@@ -1,25 +1,26 @@
 mt = {}
-mt.__tostring = function() return "hi" end
-function mt.__concat(a, b)
-   if type(a) == "table" then
-      a = a[1]
-   end
-   if type(b) == "table" then
-      b = b[1]
-   end
-   return a .. b
+mt.__tostring = function()
+    return "hi"
 end
-t1 = {"t1"}
-t2 = {"t2"}
+function mt.__concat(a, b)
+    if type(a) == "table" then
+        a = a[1]
+    end
+    if type(b) == "table" then
+        b = b[1]
+    end
+    return a .. b
+end
+t1 = { "t1" }
+t2 = { "t2" }
 testCall(function()
-	for k, v in pairs(t1) do
-		assert(k == 1)
-		assert(v == "t1")
-	end
+    for k, v in pairs(t1) do
+        assert(k == 1)
+        assert(v == "t1")
+    end
 end)
 setmetatable(t1, mt)
 setmetatable(t2, mt)
-
 
 testAssert(tostring(t1) == "hi")
 --[[

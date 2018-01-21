@@ -4,7 +4,9 @@ import se.krka.kahlua.integration.expose.ReturnValues;
 
 import java.util.Arrays;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public abstract class AbstractCaller implements Caller {
     protected final Class<?>[] parameters;
     protected final boolean needsMultipleReturnValues;
@@ -28,11 +30,11 @@ public abstract class AbstractCaller implements Caller {
 
         this.needsMultipleReturnValues = needsMultipleReturnValues;
         this.varargType = varargType;
-		int from = needsMultipleReturnValues ? 1 : 0;
-		int to = parameters.length - (varargType == null ? 0 : 1);
-		int len = to - from;
-		this.parameters = new Class[len];
-		System.arraycopy(parameters, from, this.parameters, 0, len);
+        int from = needsMultipleReturnValues ? 1 : 0;
+        int to = parameters.length - (varargType == null ? 0 : 1);
+        int len = to - from;
+        this.parameters = new Class[len];
+        System.arraycopy(parameters, from, this.parameters, 0, len);
     }
 
     @Override
@@ -54,5 +56,5 @@ public abstract class AbstractCaller implements Caller {
     public final boolean needsMultipleReturnValues() {
         return needsMultipleReturnValues;
     }
-        
+
 }

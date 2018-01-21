@@ -39,25 +39,25 @@ import static org.junit.Assert.assertEquals;
 
 public class LoadfileTest {
 
-	@Test
-	public void load() throws IOException {
-		MockProvider provider = new MockProvider();
-		provider.addSource("/a", "t = {}");
+    @Test
+    public void load() throws IOException {
+        MockProvider provider = new MockProvider();
+        provider.addSource("/a", "t = {}");
 
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(byteArrayOutputStream);
-		Platform platform = new J2SEPlatform();
-		KahluaTable env = platform.newEnvironment();
-		KahluaThread state = new KahluaThread(printStream, platform, env);
-		new Loadfile(provider).install(env);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        Platform platform = new J2SEPlatform();
+        KahluaTable env = platform.newEnvironment();
+        KahluaThread state = new KahluaThread(printStream, platform, env);
+        new Loadfile(provider).install(env);
 
-		LuaClosure luaClosure = LuaCompiler.loadstring(
-				"loadfile('/a')() if(t == nil) then print('a') else print('b') end", "foo", state.getEnvironment());
-		Object[] objects = state.pcall(luaClosure);
-		assertEquals(Arrays.toString(objects), Boolean.TRUE, objects[0]);
-		String outputString = RequireTest.setNewLines(new String(byteArrayOutputStream.toByteArray()));
-		assertEquals("b\n", outputString);
-	}
+        LuaClosure luaClosure = LuaCompiler.loadstring(
+                "loadfile('/a')() if(t == nil) then print('a') else print('b') end", "foo", state.getEnvironment());
+        Object[] objects = state.pcall(luaClosure);
+        assertEquals(Arrays.toString(objects), Boolean.TRUE, objects[0]);
+        String outputString = RequireTest.setNewLines(new String(byteArrayOutputStream.toByteArray()));
+        assertEquals("b\n", outputString);
+    }
 
 }
 

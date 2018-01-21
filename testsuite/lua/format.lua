@@ -1,16 +1,16 @@
 function testformat(expected, template, ...)
-	local t = {...}
-	testCall("string.format: " .. template, function()
-		local output = string.format(template, unpack(t))
+    local t = { ... }
+    testCall("string.format: " .. template, function()
+        local output = string.format(template, unpack(t))
 
-		local inputs = ""
-		for i = 1, #t do
-			inputs = string.format("%s, %q", inputs, t[i])
-		end
+        local inputs = ""
+        for i = 1, #t do
+            inputs = string.format("%s, %q", inputs, t[i])
+        end
 
-		local msg = string.format("string.format(%q%s) == %q, expected %q", template, inputs, output, expected)
-		assert(output == expected, msg)
-	end)
+        local msg = string.format("string.format(%q%s) == %q, expected %q", template, inputs, output, expected)
+        assert(output == expected, msg)
+    end)
 end
 
 testformat("-0.0", "%.1f", tonumber("-0"))
@@ -20,7 +20,7 @@ testformat("-inf", "%.1f", tonumber("-inF"))
 testformat("inf", "%.1f", tonumber("iNf"))
 testformat("nan", "%.1f", tonumber("nan"))
 
-testformat("5,8,13,21", "%d,%d,%d,%d", 5,8,13,21)
+testformat("5,8,13,21", "%d,%d,%d,%d", 5, 8, 13, 21)
 testformat("     hello", "%10s", "hello")
 testformat("     hello", "%010s", "hello") -- zero padding only for numbers!
 testformat("hello", "%1s", "hello")
@@ -148,30 +148,30 @@ testformat("     00001", "%10.5x", 1)
 assert(string.format("%.0x", -1):sub(1, 8) == "ffffffff")
 
 do
-	local zero = 0
-	local one = 1
-	local inf = one / zero
-	local plusinf = inf
-	local neginf = -plusinf
-	local nan = zero / zero
-	assert(tostring(plusinf) == "inf", "expected inf, got " .. tostring(plusinf))
-	assert(tostring(neginf) == "-inf", "expected -inf, got " .. tostring(neginf))
-	assert(tostring(nan) == "nan", "expected nan, got " .. tostring(nan))
-	testformat("inf", "%f", plusinf)
-	testformat("-inf", "%f", neginf)
-	testformat("nan", "%f", nan)
+    local zero = 0
+    local one = 1
+    local inf = one / zero
+    local plusinf = inf
+    local neginf = -plusinf
+    local nan = zero / zero
+    assert(tostring(plusinf) == "inf", "expected inf, got " .. tostring(plusinf))
+    assert(tostring(neginf) == "-inf", "expected -inf, got " .. tostring(neginf))
+    assert(tostring(nan) == "nan", "expected nan, got " .. tostring(nan))
+    testformat("inf", "%f", plusinf)
+    testformat("-inf", "%f", neginf)
+    testformat("nan", "%f", nan)
 
-	testformat("+inf", "%+f", plusinf)
-	testformat("+inf", "%+e", plusinf)
-	testformat("+INF", "%+E", plusinf)
-	testformat("+inf", "%+g", plusinf)
-	testformat("+INF", "%+G", plusinf)
+    testformat("+inf", "%+f", plusinf)
+    testformat("+inf", "%+e", plusinf)
+    testformat("+INF", "%+E", plusinf)
+    testformat("+inf", "%+g", plusinf)
+    testformat("+INF", "%+G", plusinf)
 
-	testformat("-inf", "%+f", neginf)
-	testformat("-inf", "%+e", neginf)
-	testformat("-INF", "%+E", neginf)
-	testformat("-inf", "%+g", neginf)
-	testformat("-INF", "%+G", neginf)
+    testformat("-inf", "%+f", neginf)
+    testformat("-inf", "%+e", neginf)
+    testformat("-INF", "%+E", neginf)
+    testformat("-inf", "%+g", neginf)
+    testformat("-INF", "%+G", neginf)
 
 end
 
@@ -181,43 +181,45 @@ testformat("1.0e+02", "%#.2g", 99.9)
 
 -- %, s, q, c, d, E, e, f, g, G, i, o, u, X, and x
 testcases = {
-	["%"]={"%"},
-	["c"]={[255]=string.char(255), [120]='x'},
-	["d"]={[-1]='-1', [1]='1', ["1"]='1', [1.1]='1', [10]='10', [255]='255'},
-	["e"]={[-1]="-1.000000e+00", [1]="1.000000e+00", ["1"]="1.000000e+00", [1.1]="1.100000e+00", 
-				[10]="1.000000e+01", [255]="2.550000e+02"},
-	["E"]={[-1]="-1.000000E+00", [1]="1.000000E+00", ["1"]="1.000000E+00", [1.1]="1.100000E+00", 
-				[10]="1.000000E+01", [255]="2.550000E+02"},
-	["f"]={[-1]="-1.000000", [1]="1.000000", ["1"]="1.000000", [1.1]="1.100000", 
-				[10]="10.000000", [255]="255.000000"},
-	["g"]={[-1]='-1', [1]='1', ["1"]='1', [1.1]='1.1', [10]='10', [255]='255'},
-	["G"]={[-1]='-1', [1]='1', ["1"]='1', [1.1]='1.1', [10]='10', [255]='255'},
-	["i"]={[-1]='-1', [1]='1', ["1"]='1', [1.1]='1', [10]='10', [255]='255'},
-	["o"]={[1]='1', ["1"]='1', [1.1]='1', [10]='12', [255]="377"},
-	["q"]={["\n"]='"\\\n"', ["\r"]='"\\r"', ["\""]='"\\""', ["\t"]='"\t"'},
-	["s"]={[""]="", ["abc"]="abc", [1]="1"},
-	["u"]={[1]='1', ["1"]='1', [1.1]='1', [10]='10', [255]='255'},
-	["x"]={[1]='1', ["1"]='1', [1.1]='1', [10]='a', [255]="ff"},
-	["X"]={[1]='1', ["1"]='1', [1.1]='1', [10]='A', [255]='FF'},
+    ["%"] = { "%" },
+    ["c"] = { [255] = string.char(255), [120] = 'x' },
+    ["d"] = { [-1] = '-1', [1] = '1', ["1"] = '1', [1.1] = '1', [10] = '10', [255] = '255' },
+    ["e"] = { [-1] = "-1.000000e+00", [1] = "1.000000e+00", ["1"] = "1.000000e+00", [1.1] = "1.100000e+00",
+              [10] = "1.000000e+01", [255] = "2.550000e+02" },
+    ["E"] = { [-1] = "-1.000000E+00", [1] = "1.000000E+00", ["1"] = "1.000000E+00", [1.1] = "1.100000E+00",
+              [10] = "1.000000E+01", [255] = "2.550000E+02" },
+    ["f"] = { [-1] = "-1.000000", [1] = "1.000000", ["1"] = "1.000000", [1.1] = "1.100000",
+              [10] = "10.000000", [255] = "255.000000" },
+    ["g"] = { [-1] = '-1', [1] = '1', ["1"] = '1', [1.1] = '1.1', [10] = '10', [255] = '255' },
+    ["G"] = { [-1] = '-1', [1] = '1', ["1"] = '1', [1.1] = '1.1', [10] = '10', [255] = '255' },
+    ["i"] = { [-1] = '-1', [1] = '1', ["1"] = '1', [1.1] = '1', [10] = '10', [255] = '255' },
+    ["o"] = { [1] = '1', ["1"] = '1', [1.1] = '1', [10] = '12', [255] = "377" },
+    ["q"] = { ["\n"] = '"\\\n"', ["\r"] = '"\\r"', ["\""] = '"\\""', ["\t"] = '"\t"' },
+    ["s"] = { [""] = "", ["abc"] = "abc", [1] = "1" },
+    ["u"] = { [1] = '1', ["1"] = '1', [1.1] = '1', [10] = '10', [255] = '255' },
+    ["x"] = { [1] = '1', ["1"] = '1', [1.1] = '1', [10] = 'a', [255] = "ff" },
+    ["X"] = { [1] = '1', ["1"] = '1', [1.1] = '1', [10] = 'A', [255] = 'FF' },
 }
 
 for t, c in pairs(testcases) do
-	local template = "%" .. t
-	for k, v in pairs(c) do
-		testformat(v, template, k)
-		--print(string.format("string.format(%q, %q) == %q", template, k, result))
-	end
+    local template = "%" .. t
+    for k, v in pairs(c) do
+        testformat(v, template, k)
+        --print(string.format("string.format(%q, %q) == %q", template, k, result))
+    end
 end
 function verifyinvalidpattern(pattern)
-	local status, err = pcall(function() string.format(pattern) end)
-	assert(not status)
+    local status, err = pcall(function()
+        string.format(pattern)
+    end)
+    assert(not status)
 end
 
 function verifyinvalidpatterns(first, ...)
-	if first then
-		verifyinvalidpattern(first)
-		return verifyinvalidpatterns(...)
-	end
+    if first then
+        verifyinvalidpattern(first)
+        return verifyinvalidpatterns(...)
+    end
 end
 
 verifyinvalidpatterns("%", "% ", "%.", "%..f", "%...f", "%111", "%111.111")

@@ -13,7 +13,9 @@ public class Require implements JavaFunction {
         LOADING,
         LOADED,
         BROKEN;
-    };
+    }
+
+    ;
 
     private static class Result {
         public final String errorMessage;
@@ -26,6 +28,7 @@ public class Require implements JavaFunction {
 
         public static final Result LOADING = new Result(null, State.LOADING);
         public static final Result LOADED = new Result(null, State.LOADED);
+
         public static Result error(String s) {
             return new Result(s, State.BROKEN);
         }
@@ -46,12 +49,12 @@ public class Require implements JavaFunction {
         KahluaTable env = callFrame.getEnvironment();
         Map<String, Result> states = (Map<String, Result>) callFrame.getThread().tableGet(env, this);
 
-		String path = KahluaUtil.getStringArg(callFrame, 1, "require");
+        String path = KahluaUtil.getStringArg(callFrame, 1, "require");
 
         Result result = states.get(path);
         if (result == null) {
             setState(states, path, Result.LOADING);
-            
+
             Reader source = luaSourceProvider.getLuaSource(path);
             if (source == null) {
                 error(states, path, "Does not exist: " + path);

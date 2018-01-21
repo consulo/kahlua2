@@ -1,5 +1,5 @@
 local coro = coroutine.create(function()
-	error"foo"
+    error "foo"
 end)
 coroutine.resume(coro)
 

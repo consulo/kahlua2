@@ -9,33 +9,33 @@ import se.krka.kahlua.integration.annotations.LuaMethod;
 @Desc("This is a base class description")
 public class BaseAnnotationClass {
 
-	@LuaConstructor(name="NewBase")
-	@Desc("This is a base class constructor description")
-	public BaseAnnotationClass() {
-		
-	}
-	
-	public int foo;
-	public String bar;
+    @LuaConstructor(name = "NewBase")
+    @Desc("This is a base class constructor description")
+    public BaseAnnotationClass() {
 
-	@LuaMethod
-	public void baseDoStuff() {
+    }
 
-	}
+    public int foo;
+    public String bar;
 
-	@LuaMethod
-	public void baseMethodWithArgs(int foo, String bar) {
-		this.foo = foo;
-		this.bar = bar;
+    @LuaMethod
+    public void baseDoStuff() {
 
-	}
-	
-	
-	@LuaMethod	
-	@Desc("This is a base class method description")
-	public String baseMethod2() {
-		return "Base";
-	}
+    }
+
+    @LuaMethod
+    public void baseMethodWithArgs(int foo, String bar) {
+        this.foo = foo;
+        this.bar = bar;
+
+    }
+
+
+    @LuaMethod
+    @Desc("This is a base class method description")
+    public String baseMethod2() {
+        return "Base";
+    }
 
     @LuaMethod
     @Desc("Method with varargs")
@@ -68,13 +68,13 @@ public class BaseAnnotationClass {
     public String sameName(String s1) {
         return "wrong";
     }
-    
+
     @LuaMethod
     public String sameName(String s1, String s2) {
         return s1 + s2;
     }
 
-    @LuaMethod(name="overloaded")
+    @LuaMethod(name = "overloaded")
     public String overloaded() {
         return "base";
     }

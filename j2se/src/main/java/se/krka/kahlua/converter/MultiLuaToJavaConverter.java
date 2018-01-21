@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiLuaToJavaConverter<LuaType, JavaType> implements LuaToJavaConverter<LuaType, JavaType> {
-    private final List<LuaToJavaConverter<LuaType, JavaType>> converters = new ArrayList<LuaToJavaConverter<LuaType,JavaType>>();
+    private final List<LuaToJavaConverter<LuaType, JavaType>> converters = new ArrayList<LuaToJavaConverter<LuaType, JavaType>>();
     private final Class<LuaType> luaType;
     private final Class<JavaType> javaType;
 

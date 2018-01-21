@@ -1,4 +1,4 @@
-local f = loadstring[[
+local f = loadstring [[
 local function fac(n)
 	if n <= 0 then
 		return 1

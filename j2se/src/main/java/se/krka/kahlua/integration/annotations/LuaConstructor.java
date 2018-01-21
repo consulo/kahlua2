@@ -31,5 +31,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.CONSTRUCTOR)
 public @interface LuaConstructor {
-	public String name();
+    public String name();
 }

@@ -36,19 +36,19 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 public class OutputTerminal extends JPanel implements FocusListener {
-	private final AppenderThread appender;
+    private final AppenderThread appender;
 
     final JScrollPane scrollpane;
     boolean scrollDown;
     private static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(1, 5, 1, 5);
 
-	final JEditorPane editorPane;
+    final JEditorPane editorPane;
     final VoidLexer voidLexer;
 
     private final PrintStream printStream = new PrintStream(new OutputStream() {
         @Override
         public void write(int b) throws IOException {
-			appender.append((char) b);
+            appender.append((char) b);
         }
     });
 
@@ -63,11 +63,11 @@ public class OutputTerminal extends JPanel implements FocusListener {
         editorPane = new JEditorPane();
         voidLexer = new VoidLexer();
 
-		appender = new AppenderThread(outputLexer, this);
+        appender = new AppenderThread(outputLexer, this);
 
         JSyntaxUtil.installSyntax(editorPane, false, new KahluaKit(voidLexer));
         voidLexer.doc = (SyntaxDocument) editorPane.getDocument();
-        
+
         editorPane.setBackground(background);
         editorPane.setBorder(EMPTY_BORDER);
         editorPane.setEditable(false);
@@ -92,7 +92,7 @@ public class OutputTerminal extends JPanel implements FocusListener {
 
         setFocusable(true);
         add(scrollpane, BorderLayout.CENTER);
-	}
+    }
 
     public synchronized void appendLua(String text) {
         append(text, luaLexer);
@@ -107,7 +107,7 @@ public class OutputTerminal extends JPanel implements FocusListener {
     }
 
     private synchronized void append(final String text, final Lexer lexer) {
-		SwingUtilities.invokeLater(new SyntaxTextAppender(this, text, lexer));
+        SwingUtilities.invokeLater(new SyntaxTextAppender(this, text, lexer));
     }
 
     public PrintStream getPrintStream() {
@@ -139,7 +139,7 @@ public class OutputTerminal extends JPanel implements FocusListener {
     }
 
 
-	public void appendOutput(String s) {
-		appender.append(s);
-	}
+    public void appendOutput(String s) {
+        appender.append(s);
+    }
 }

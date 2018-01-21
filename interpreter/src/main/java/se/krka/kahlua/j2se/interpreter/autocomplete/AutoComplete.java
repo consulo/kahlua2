@@ -41,7 +41,7 @@ import java.util.List;
 public class AutoComplete {
     private final Menu menu;
     private final Tooltip tooltip;
-	private final JTextComponent component;
+    private final JTextComponent component;
     private final KahluaTable env;
 
     private final WordFinder wordFinder;
@@ -57,7 +57,7 @@ public class AutoComplete {
     };
 
     public AutoComplete(final JTextComponent component, Platform platform, KahluaTable env) {
-		this.component = component;
+        this.component = component;
         this.env = env;
         thread = KahluaUtil.getWorkerThread(platform, env);
         characterSet = new LuaAutoCompleteSet();
@@ -196,7 +196,7 @@ public class AutoComplete {
                 }
             }
         });
-	}
+    }
 
     private void hideAll() {
         tooltip.setVisible(false);
@@ -218,7 +218,7 @@ public class AutoComplete {
         populateList(returnSet, cur);
 
         return returnSet;
-	}
+    }
 
     private void populateList(Collection<CompletionItem> returnSet, Object obj) {
         for (int i = 0; i < 20; i++) {
@@ -245,8 +245,8 @@ public class AutoComplete {
     private String getExtraInfo(Object value) {
         String type = KahluaUtil.type(value);
         if (type.equals("nil") ||
-            type.equals("table") ||
-            type.equals("function")) {
+                type.equals("table") ||
+                type.equals("function")) {
             return "[" + type + "]";
         }
         return KahluaUtil.tostring(value, thread);
@@ -311,7 +311,7 @@ public class AutoComplete {
             updateMatches();
             updateMenu();
         }
-	}
+    }
 
     private void updateMatches() {
         try {
@@ -386,8 +386,8 @@ public class AutoComplete {
             }
             component.requestFocus();
             component.setCaretPosition(word.getStart() + newText.length());
-		}
-	}
+        }
+    }
 
     public JComponent getComponent() {
         return component;

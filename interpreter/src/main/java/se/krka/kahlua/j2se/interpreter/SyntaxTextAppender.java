@@ -33,41 +33,41 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 class SyntaxTextAppender implements Runnable {
-	private final String text;
-	private final Lexer lexer;
-	private final OutputTerminal outputTerminal;
-	private final CountDownLatch latch = new CountDownLatch(1);
+    private final String text;
+    private final Lexer lexer;
+    private final OutputTerminal outputTerminal;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
-	public SyntaxTextAppender(OutputTerminal outputTerminal, String text, Lexer lexer) {
-		this.outputTerminal = outputTerminal;
-		this.text = text;
-		this.lexer = lexer;
-	}
+    public SyntaxTextAppender(OutputTerminal outputTerminal, String text, Lexer lexer) {
+        this.outputTerminal = outputTerminal;
+        this.text = text;
+        this.lexer = lexer;
+    }
 
-	@Override
-	public void run() {
-		JScrollBar vert = outputTerminal.scrollpane.getVerticalScrollBar();
-		boolean isAtBottom = vert.getValue() + vert.getVisibleAmount() >= vert.getMaximum() - 32;
-		outputTerminal.scrollDown = !vert.getValueIsAdjusting() && isAtBottom;
+    @Override
+    public void run() {
+        JScrollBar vert = outputTerminal.scrollpane.getVerticalScrollBar();
+        boolean isAtBottom = vert.getValue() + vert.getVisibleAmount() >= vert.getMaximum() - 32;
+        outputTerminal.scrollDown = !vert.getValueIsAdjusting() && isAtBottom;
 
-		try {
-			Document document = outputTerminal.editorPane.getDocument();
-			int startPos = document.getLength();
+        try {
+            Document document = outputTerminal.editorPane.getDocument();
+            int startPos = document.getLength();
 
-			Segment insertSegment = new Segment(text.toCharArray(), 0, text.length());
-			ArrayList<Token> newTokens = new ArrayList<Token>();
-			lexer.parse(insertSegment, 0, newTokens);
-			outputTerminal.voidLexer.setNewTokens(newTokens, document.getLength());
+            Segment insertSegment = new Segment(text.toCharArray(), 0, text.length());
+            ArrayList<Token> newTokens = new ArrayList<Token>();
+            lexer.parse(insertSegment, 0, newTokens);
+            outputTerminal.voidLexer.setNewTokens(newTokens, document.getLength());
 
-			document.insertString(startPos, text, null);
+            document.insertString(startPos, text, null);
 
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		latch.countDown();
-	}
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+        latch.countDown();
+    }
 
-	public void await() throws InterruptedException {
-		latch.await();
-	}
+    public void await() throws InterruptedException {
+        latch.await();
+    }
 }

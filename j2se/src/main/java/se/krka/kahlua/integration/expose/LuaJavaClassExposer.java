@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * A tool to automatically expose java classes and
  * methods to a lua thread.
- *
+ * <p>
  * NOTE: This tool requires annotations and reflection
  * (java 1.5 or higher) to work
  * and is therefore not supported in CLDC.
@@ -52,46 +52,46 @@ public class LuaJavaClassExposer {
     private final KahluaTable environment;
     private final KahluaTable classMetatables;
     private final Set<Type> visitedTypes = new HashSet<Type>();
-	private final KahluaTable autoExposeBase;
-	private final Map<Class<?>, Boolean> shouldExposeCache = new HashMap<Class<?>, Boolean>();
+    private final KahluaTable autoExposeBase;
+    private final Map<Class<?>, Boolean> shouldExposeCache = new HashMap<Class<?>, Boolean>();
 
-	public LuaJavaClassExposer(KahluaConverterManager manager, Platform platform, KahluaTable environment) {
-		this(manager, platform, environment, null);
-	}
+    public LuaJavaClassExposer(KahluaConverterManager manager, Platform platform, KahluaTable environment) {
+        this(manager, platform, environment, null);
+    }
 
-	public LuaJavaClassExposer(KahluaConverterManager manager, Platform platform, KahluaTable environment, KahluaTable autoExposeBase) {
+    public LuaJavaClassExposer(KahluaConverterManager manager, Platform platform, KahluaTable environment, KahluaTable autoExposeBase) {
         this.manager = manager;
         this.platform = platform;
         this.environment = environment;
-		this.autoExposeBase = autoExposeBase;
-		classMetatables = KahluaUtil.getClassMetatables(platform, environment);
+        this.autoExposeBase = autoExposeBase;
+        classMetatables = KahluaUtil.getClassMetatables(platform, environment);
 
-		if (classMetatables.getMetatable() == null) {
-			KahluaTable mt = platform.newTable();
-			mt.rawset("__index", new JavaFunction() {
-				@Override
-				public int call(LuaCallFrame callFrame, int nArguments) {
-					Object t = callFrame.get(0);
-					Object key = callFrame.get(1);
-					if (t != classMetatables) {
-						throw new IllegalArgumentException("Expected classmetatables as the first argument to __index");
-					}
-					if (key == null || !(key instanceof Class)) {
-						return callFrame.pushNil();
-					}
-					Class clazz = (Class) key;
-					if (!isExposed(clazz) && shouldExpose(clazz)) {
-						exposeClass(clazz);
-						return callFrame.push(classMetatables.rawget(clazz));
-					}
-					return callFrame.pushNil();
-				}
-			});
-			classMetatables.setMetatable(mt);
-		}
+        if (classMetatables.getMetatable() == null) {
+            KahluaTable mt = platform.newTable();
+            mt.rawset("__index", new JavaFunction() {
+                @Override
+                public int call(LuaCallFrame callFrame, int nArguments) {
+                    Object t = callFrame.get(0);
+                    Object key = callFrame.get(1);
+                    if (t != classMetatables) {
+                        throw new IllegalArgumentException("Expected classmetatables as the first argument to __index");
+                    }
+                    if (key == null || !(key instanceof Class)) {
+                        return callFrame.pushNil();
+                    }
+                    Class clazz = (Class) key;
+                    if (!isExposed(clazz) && shouldExpose(clazz)) {
+                        exposeClass(clazz);
+                        return callFrame.push(classMetatables.rawget(clazz));
+                    }
+                    return callFrame.pushNil();
+                }
+            });
+            classMetatables.setMetatable(mt);
+        }
     }
 
-	public Map<Class<?>, ClassDebugInformation> getClassDebugInformation() {
+    public Map<Class<?>, ClassDebugInformation> getClassDebugInformation() {
         Object classMap = environment.rawget(DEBUGINFO_KEY);
         if (classMap == null || !(classMap instanceof Map)) {
             classMap = new HashMap<Class<?>, ClassDebugInformation>();
@@ -100,19 +100,19 @@ public class LuaJavaClassExposer {
         return (Map<Class<?>, ClassDebugInformation>) classMap;
     }
 
-	public void exposeClass(Class<?> clazz) {
-		if (clazz != null && !isExposed(clazz)) {
-			shouldExposeCache.clear();
-			readDebugData(clazz);
-			setupMetaTables(clazz);
+    public void exposeClass(Class<?> clazz) {
+        if (clazz != null && !isExposed(clazz)) {
+            shouldExposeCache.clear();
+            readDebugData(clazz);
+            setupMetaTables(clazz);
 
-			populateMethods(clazz);
-		}
-	}
+            populateMethods(clazz);
+        }
+    }
 
-	public void exposeClassUsingJavaEquals(Class<?> clazz) {
-		exposeClass(clazz);
-		addJavaEquals(getMetaTable(clazz));
+    public void exposeClassUsingJavaEquals(Class<?> clazz) {
+        exposeClass(clazz);
+        addJavaEquals(getMetaTable(clazz));
     }
 
     private KahluaTable getMetaTable(Class<?> clazz) {
@@ -253,37 +253,37 @@ public class LuaJavaClassExposer {
         }
     }
 
-	public boolean shouldExpose(Class<?> clazz) {
-		if (clazz == null) {
-			return false;
-		}
-		Boolean bool = shouldExposeCache.get(clazz);
-		if (bool != null) {
-			return bool.booleanValue();
-		}
-		if (autoExposeBase != null) {
-			exposeLikeJavaRecursively(clazz, autoExposeBase);
-			return true;
-		}
-		if (isExposed(clazz)) {
-			shouldExposeCache.put(clazz, Boolean.TRUE);
-			return true;
-		}
-		if (shouldExpose(clazz.getSuperclass())) {
-			shouldExposeCache.put(clazz, Boolean.TRUE);
-			return true;
-		}
-		for (Class<?> sub : clazz.getInterfaces()) {
-			if (shouldExpose(sub)) {
-				shouldExposeCache.put(clazz, Boolean.TRUE);
-				return true;
-			}
-		}
-		shouldExposeCache.put(clazz, Boolean.FALSE);
-		return false;
-	}
+    public boolean shouldExpose(Class<?> clazz) {
+        if (clazz == null) {
+            return false;
+        }
+        Boolean bool = shouldExposeCache.get(clazz);
+        if (bool != null) {
+            return bool.booleanValue();
+        }
+        if (autoExposeBase != null) {
+            exposeLikeJavaRecursively(clazz, autoExposeBase);
+            return true;
+        }
+        if (isExposed(clazz)) {
+            shouldExposeCache.put(clazz, Boolean.TRUE);
+            return true;
+        }
+        if (shouldExpose(clazz.getSuperclass())) {
+            shouldExposeCache.put(clazz, Boolean.TRUE);
+            return true;
+        }
+        for (Class<?> sub : clazz.getInterfaces()) {
+            if (shouldExpose(sub)) {
+                shouldExposeCache.put(clazz, Boolean.TRUE);
+                return true;
+            }
+        }
+        shouldExposeCache.put(clazz, Boolean.FALSE);
+        return false;
+    }
 
-	private void setupMetaTables(Class<?> clazz) {
+    private void setupMetaTables(Class<?> clazz) {
         Class<?> superClazz = clazz.getSuperclass();
         exposeClass(superClazz);
 
@@ -291,26 +291,26 @@ public class LuaJavaClassExposer {
 
         KahluaTable metatable = platform.newTable();
         KahluaTable indexTable = platform.newTable();
-		metatable.rawset("__index", indexTable);
-		if (superMetaTable != null) {
-			metatable.rawset("__newindex", superMetaTable.rawget("__newindex"));
-		}
-		indexTable.setMetatable(superMetaTable);
+        metatable.rawset("__index", indexTable);
+        if (superMetaTable != null) {
+            metatable.rawset("__newindex", superMetaTable.rawget("__newindex"));
+        }
+        indexTable.setMetatable(superMetaTable);
         classMetatables.rawset(clazz, metatable);
     }
 
-	private void addJavaEquals(KahluaTable metatable) {
-		metatable.rawset("__eq", new JavaFunction() {
-			@Override
-			public int call(LuaCallFrame callFrame, int nArguments) {
-				boolean equals = callFrame.get(0).equals(callFrame.get(1));
-				callFrame.push(equals);
-				return 1;
-			}
-		});
-	}
+    private void addJavaEquals(KahluaTable metatable) {
+        metatable.rawset("__eq", new JavaFunction() {
+            @Override
+            public int call(LuaCallFrame callFrame, int nArguments) {
+                boolean equals = callFrame.get(0).equals(callFrame.get(1));
+                callFrame.push(equals);
+                return 1;
+            }
+        });
+    }
 
-	public void exposeGlobalFunctions(Object object) {
+    public void exposeGlobalFunctions(Object object) {
         Class<?> clazz = object.getClass();
         readDebugData(clazz);
         for (Method method : clazz.getMethods()) {
@@ -329,9 +329,9 @@ public class LuaJavaClassExposer {
         }
     }
 
-	public void exposeLikeJava(Class clazz) {
-		exposeLikeJava(clazz, autoExposeBase);
-	}
+    public void exposeLikeJava(Class clazz) {
+        exposeLikeJava(clazz, autoExposeBase);
+    }
 
     public void exposeLikeJava(Class clazz, KahluaTable staticBase) {
         if (clazz == null || isExposed(clazz)) {
@@ -453,8 +453,8 @@ public class LuaJavaClassExposer {
 
             Map<Class<?>, ClassDebugInformation> information = getClassDebugInformation();
             information.put(clazz, debugInfo);
-		}
-	}
+        }
+    }
 
     @LuaMethod(global = true, name = "definition")
     @Desc("returns a string that describes the object")
@@ -475,9 +475,9 @@ public class LuaJavaClassExposer {
         }
     }
 
-	public void exposeLikeJavaRecursively(Type type) {
-		exposeLikeJavaRecursively(type, autoExposeBase);
-	}
+    public void exposeLikeJavaRecursively(Type type) {
+        exposeLikeJavaRecursively(type, autoExposeBase);
+    }
 
     public void exposeLikeJavaRecursively(Type type, KahluaTable staticBase) {
         exposeLikeJava(staticBase, visitedTypes, type);

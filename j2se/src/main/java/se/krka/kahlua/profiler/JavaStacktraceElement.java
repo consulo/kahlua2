@@ -2,36 +2,38 @@ package se.krka.kahlua.profiler;
 
 import se.krka.kahlua.vm.JavaFunction;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class JavaStacktraceElement implements StacktraceElement {
-	private final JavaFunction javaFunction;
+    private final JavaFunction javaFunction;
 
-	public JavaStacktraceElement(JavaFunction javaFunction) {
-		this.javaFunction = javaFunction;
-	}
+    public JavaStacktraceElement(JavaFunction javaFunction) {
+        this.javaFunction = javaFunction;
+    }
 
-	@Override
-	public String name() {
-		return javaFunction.toString();
-	}
+    @Override
+    public String name() {
+        return javaFunction.toString();
+    }
 
-	@Override
-	public String type() {
-		return "java";
-	}
+    @Override
+    public String type() {
+        return "java";
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof JavaStacktraceElement)) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof JavaStacktraceElement)) return false;
 
-		JavaStacktraceElement that = (JavaStacktraceElement) o;
+        JavaStacktraceElement that = (JavaStacktraceElement) o;
 
-		return javaFunction == that.javaFunction;
-	}
+        return javaFunction == that.javaFunction;
+    }
 
-	@Override
-	public int hashCode() {
-		return javaFunction.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return javaFunction.hashCode();
+    }
 }

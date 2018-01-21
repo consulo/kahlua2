@@ -51,7 +51,7 @@ public class Menu extends HelperWindow {
         visualList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                SwingUtilities.invokeLater(new Runnable(){
+                SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         autoComplete.showDefinition();

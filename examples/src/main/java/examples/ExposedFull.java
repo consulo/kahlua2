@@ -35,23 +35,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ExposedFull {
-	private final KahluaConverterManager converterManager = new KahluaConverterManager();
-	private final J2SEPlatform platform = new J2SEPlatform();
-	private final KahluaTable env = platform.newEnvironment();
-	private final KahluaThread thread = new KahluaThread(platform, env);
-	private final LuaCaller caller = new LuaCaller(converterManager);
-	private final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
+    private final KahluaConverterManager converterManager = new KahluaConverterManager();
+    private final J2SEPlatform platform = new J2SEPlatform();
+    private final KahluaTable env = platform.newEnvironment();
+    private final KahluaThread thread = new KahluaThread(platform, env);
+    private final LuaCaller caller = new LuaCaller(converterManager);
+    private final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
 
-	public static void main(String[] args) throws IOException {
-		new ExposedFull().run();
-	}
+    public static void main(String[] args) throws IOException {
+        new ExposedFull().run();
+    }
 
-	public void run() throws IOException {
-		KahluaTable javaBase = platform.newTable();
-		env.rawset("Java", javaBase);
-		exposer.exposeLikeJavaRecursively(ArrayList.class, javaBase);
+    public void run() throws IOException {
+        KahluaTable javaBase = platform.newTable();
+        env.rawset("Java", javaBase);
+        exposer.exposeLikeJavaRecursively(ArrayList.class, javaBase);
 
-		LuaClosure closure = LuaCompiler.loadstring("local myList = Java.ArrayList.new(); print(myList); myList:add('foo'); print(myList)", "", env);
-		caller.protectedCall(thread, closure);
-	}
+        LuaClosure closure = LuaCompiler.loadstring("local myList = Java.ArrayList.new(); print(myList); myList:add('foo'); print(myList)", "", env);
+        caller.protectedCall(thread, closure);
+    }
 }

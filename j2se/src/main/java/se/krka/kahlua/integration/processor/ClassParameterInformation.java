@@ -33,24 +33,26 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @exclude */
+/**
+ * @exclude
+ */
 public class ClassParameterInformation implements Serializable {
-	private static final long serialVersionUID = 7634190901254143200L;
+    private static final long serialVersionUID = 7634190901254143200L;
 
-	private final String packageName;
-	private final String simpleClassName;
+    private final String packageName;
+    private final String simpleClassName;
 
-	public Map<String, MethodParameterInformation> methods = new HashMap<String, MethodParameterInformation>();
-	
-	private ClassParameterInformation() {
-		packageName = null;
-		simpleClassName = null;
-	}
-	
-	public ClassParameterInformation(String packageName, String simpleClassName) {
-		this.packageName = packageName;
-		this.simpleClassName = simpleClassName;
-	}
+    public Map<String, MethodParameterInformation> methods = new HashMap<String, MethodParameterInformation>();
+
+    private ClassParameterInformation() {
+        packageName = null;
+        simpleClassName = null;
+    }
+
+    public ClassParameterInformation(String packageName, String simpleClassName) {
+        this.packageName = packageName;
+        this.simpleClassName = simpleClassName;
+    }
 
     public ClassParameterInformation(Class<?> clazz) {
         Package p = clazz.getPackage();
@@ -67,51 +69,50 @@ public class ClassParameterInformation implements Serializable {
     }
 
     public String getPackageName() {
-		return packageName;
-	}
-	
-	public String getSimpleClassName() {
-		return simpleClassName;
-	}
-	
-	public String getFullClassName() {
-		if (packageName == null || packageName.equals("")) {
-			return simpleClassName;
-		}
-		return packageName + "." + simpleClassName;
-	}
-	
-	
-	
-	public static ClassParameterInformation getFromStream(Class<?> clazz) throws IOException, ClassNotFoundException {
-		String fileName = getFileName(clazz);
-		InputStream stream = clazz.getResourceAsStream(fileName);
-		if (stream == null) {
-			return null;
-		}
-		ObjectInputStream objectStream = new ObjectInputStream(stream);
-		return (ClassParameterInformation) objectStream.readObject();
-	}
+        return packageName;
+    }
 
-	private static String getFileName(Class<?> clazz) {
-		return "/" + clazz.getPackage().getName().replace('.', '/') + "/" + getSimpleName(clazz) + ".luadebugdata";
-	}
+    public String getSimpleClassName() {
+        return simpleClassName;
+    }
 
-	private static String getSimpleName(Class<?> clazz) {
-		if (clazz.getEnclosingClass() != null) {
-			return getSimpleName(clazz.getEnclosingClass()) + "_" + clazz.getSimpleName();
-		}
-		return clazz.getSimpleName();
-	}
+    public String getFullClassName() {
+        if (packageName == null || packageName.equals("")) {
+            return simpleClassName;
+        }
+        return packageName + "." + simpleClassName;
+    }
 
-	public void saveToStream(OutputStream stream) throws IOException {
-		ObjectOutputStream outputStream = new ObjectOutputStream(stream);
-		outputStream.writeObject(this);
-	}
 
-	public String getFileName() {
-		return getFileName(getClass());
-	}
-	
-	
+    public static ClassParameterInformation getFromStream(Class<?> clazz) throws IOException, ClassNotFoundException {
+        String fileName = getFileName(clazz);
+        InputStream stream = clazz.getResourceAsStream(fileName);
+        if (stream == null) {
+            return null;
+        }
+        ObjectInputStream objectStream = new ObjectInputStream(stream);
+        return (ClassParameterInformation) objectStream.readObject();
+    }
+
+    private static String getFileName(Class<?> clazz) {
+        return "/" + clazz.getPackage().getName().replace('.', '/') + "/" + getSimpleName(clazz) + ".luadebugdata";
+    }
+
+    private static String getSimpleName(Class<?> clazz) {
+        if (clazz.getEnclosingClass() != null) {
+            return getSimpleName(clazz.getEnclosingClass()) + "_" + clazz.getSimpleName();
+        }
+        return clazz.getSimpleName();
+    }
+
+    public void saveToStream(OutputStream stream) throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(stream);
+        outputStream.writeObject(this);
+    }
+
+    public String getFileName() {
+        return getFileName(getClass());
+    }
+
+
 }

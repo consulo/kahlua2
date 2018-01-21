@@ -15,6 +15,7 @@ public class RandomLib implements JavaFunction {
 
     private static final String[] names;
     private static final RandomLib[] functions;
+
     static {
         names = new String[NUM_FUNCTIONS];
         names[RANDOM] = "random";
@@ -25,6 +26,7 @@ public class RandomLib implements JavaFunction {
             functions[i] = new RandomLib(i);
         }
     }
+
     private static final RandomLib NEWRANDOM_FUN = new RandomLib(NEWRANDOM);
     private final int index;
 
@@ -46,9 +48,12 @@ public class RandomLib implements JavaFunction {
 
     public int call(LuaCallFrame callFrame, int nArguments) {
         switch (index) {
-            case RANDOM: return random(callFrame, nArguments);
-            case RANDOMSEED: return randomSeed(callFrame, nArguments);
-            case NEWRANDOM: return newRandom(callFrame);
+            case RANDOM:
+                return random(callFrame, nArguments);
+            case RANDOMSEED:
+                return randomSeed(callFrame, nArguments);
+            case NEWRANDOM:
+                return newRandom(callFrame);
         }
         return 0;
     }
@@ -64,31 +69,31 @@ public class RandomLib implements JavaFunction {
     private int random(LuaCallFrame callFrame, int nArguments) {
         Random random = getRandom(callFrame, "random");
 
-		Double min = KahluaUtil.getOptionalNumberArg(callFrame, 2);
-		Double max = KahluaUtil.getOptionalNumberArg(callFrame, 3);
-		if (min == null) {
-			return callFrame.push(KahluaUtil.toDouble(random.nextDouble()));
-		}
-		int m = min.intValue();
-		int n;
-		if (max == null) {
-			n = m;
-			m = 1;
-		} else {
-			n = max.intValue();
-		}
+        Double min = KahluaUtil.getOptionalNumberArg(callFrame, 2);
+        Double max = KahluaUtil.getOptionalNumberArg(callFrame, 3);
+        if (min == null) {
+            return callFrame.push(KahluaUtil.toDouble(random.nextDouble()));
+        }
+        int m = min.intValue();
+        int n;
+        if (max == null) {
+            n = m;
+            m = 1;
+        } else {
+            n = max.intValue();
+        }
         return callFrame.push(KahluaUtil.toDouble(m + random.nextInt(n - m + 1)));
     }
 
     private Random getRandom(LuaCallFrame callFrame, String name) {
-		Object obj = KahluaUtil.getArg(callFrame, 1, name);
-		if (!(obj instanceof Random)) {
-			KahluaUtil.fail("First argument to " + name + " must be an object of type random.");
-		}
-		return (Random) obj;
+        Object obj = KahluaUtil.getArg(callFrame, 1, name);
+        if (!(obj instanceof Random)) {
+            KahluaUtil.fail("First argument to " + name + " must be an object of type random.");
+        }
+        return (Random) obj;
     }
 
     private int newRandom(LuaCallFrame callFrame) {
-		return callFrame.push(new Random());
+        return callFrame.push(new Random());
     }
 }

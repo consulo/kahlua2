@@ -28,6 +28,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Inherited
 public @interface LuaMethod {
-	public String name() default "";
-	public boolean global() default false;
+    public String name() default "";
+
+    public boolean global() default false;
 }

@@ -24,32 +24,32 @@ package se.krka.kahlua.converter;
 
 public class KahluaEnumConverter {
 
-	private KahluaEnumConverter() {
-	}
+    private KahluaEnumConverter() {
+    }
 
     @SuppressWarnings("unchecked")
-	public static void install(final KahluaConverterManager manager) {
-		manager.addJavaConverter(new JavaToLuaConverter<Enum>() {
-			public Object fromJavaToLua(Enum javaObject) {
+    public static void install(final KahluaConverterManager manager) {
+        manager.addJavaConverter(new JavaToLuaConverter<Enum>() {
+            public Object fromJavaToLua(Enum javaObject) {
                 return javaObject.name();
-			}
+            }
 
-			public Class<Enum> getJavaType() {
-				return Enum.class;
-			}
-		});
-		manager.addLuaConverter(new LuaToJavaConverter<String, Enum>() {
-			public Enum fromLuaToJava(String luaObject, Class<Enum> javaClass) throws IllegalArgumentException {
+            public Class<Enum> getJavaType() {
+                return Enum.class;
+            }
+        });
+        manager.addLuaConverter(new LuaToJavaConverter<String, Enum>() {
+            public Enum fromLuaToJava(String luaObject, Class<Enum> javaClass) throws IllegalArgumentException {
                 return Enum.valueOf(javaClass, luaObject);
-			}
+            }
 
-			public Class<Enum> getJavaType() {
-				return Enum.class;
-			}
+            public Class<Enum> getJavaType() {
+                return Enum.class;
+            }
 
-			public Class<String> getLuaType() {
-				return String.class;
-			}
-		});
-	}
+            public Class<String> getLuaType() {
+                return String.class;
+            }
+        });
+    }
 }

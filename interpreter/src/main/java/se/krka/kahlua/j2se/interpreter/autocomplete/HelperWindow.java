@@ -31,7 +31,7 @@ public class HelperWindow extends JWindow {
 
     public HelperWindow(Window owner) {
         super(owner);
-        position = new Point(0, 0);        
+        position = new Point(0, 0);
     }
 
     public void display(Point point, JTextComponent component) {

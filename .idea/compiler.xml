@@ -36,13 +36,12 @@
     <bytecodeTargetLevel>
       <module name="cldc11" target="1.7" />
       <module name="contrib" target="1.7" />
-      <module name="core" target="1.5" />
-      <module name="examples" target="1.5" />
-      <module name="interpreter" target="1.5" />
-      <module name="j2se" target="1.6" />
-      <module name="javadoc" target="1.5" />
+      <module name="core" target="1.7" />
+      <module name="examples" target="1.7" />
+      <module name="interpreter" target="1.7" />
+      <module name="j2se" target="1.7" />
       <module name="kahlua2" target="1.7" />
-      <module name="testsuite" target="1.5" />
+      <module name="testsuite" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

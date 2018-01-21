@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="14" failures="0" name="se.krka.kahlua.converter.KahluaConverterManagerTest" time="0.004" errors="0" skipped="0">
+<testsuite tests="14" failures="0" name="se.krka.kahlua.converter.KahluaConverterManagerTest" time="0.014" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2017.3.3"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -62,18 +62,18 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTables" time="0"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTables" time="0.001"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testSubtypeReturn" time="0"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testLuaToJavaTables" time="0"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTablesRecursion" time="0"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToLua" time="0"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testConversionError" time="0"/>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testEnumConversion" time="0"/>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToLuaDefault" time="0"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testEnumConversion" time="0.002"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToLuaDefault" time="0.001"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTablesMap" time="0"/>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testPrimitives1" time="0"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testPrimitives1" time="0.001"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testPrimitives2" time="0"/>
   <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testPrimitives3" time="0"/>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testLuaToJavaTablesMap" time="0"/>
-  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTablesRecursionInfinite" time="0.004"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testLuaToJavaTablesMap" time="0.002"/>
+  <testcase classname="se.krka.kahlua.converter.KahluaConverterManagerTest" name="testJavaToKahluaTablesRecursionInfinite" time="0.007"/>
 </testsuite>

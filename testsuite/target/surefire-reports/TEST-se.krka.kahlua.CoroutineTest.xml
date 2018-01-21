@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="se.krka.kahlua.CoroutineTest" time="0.099" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="se.krka.kahlua.CoroutineTest" time="0.14" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2017.3.3"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -62,7 +62,7 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume2" time="0.072"/>
-  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume3" time="0.019"/>
-  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume" time="0.008"/>
+  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume2" time="0.075"/>
+  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume3" time="0.065"/>
+  <testcase classname="se.krka.kahlua.CoroutineTest" name="testResume" time="0"/>
 </testsuite>

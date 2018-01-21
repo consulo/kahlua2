@@ -1,8 +1,5 @@
 package org.luaj.kahluafork.compiler;
 
-/**
- * @exclude
- */
 public class ExpDesc {
     int k; // expkind, from enumerated list, above
 

@@ -5,9 +5,6 @@ package org.luaj.kahluafork.compiler;
  ** assignment
  */
 
-/**
- * @exclude
- */
 public class LHS_assign {
     LHS_assign prev;
     /* variable (global, local, upvalue, or indexed) */

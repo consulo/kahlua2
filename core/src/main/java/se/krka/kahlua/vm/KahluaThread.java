@@ -84,9 +84,6 @@ public class KahluaThread {
     }
 
     private final Coroutine rootCoroutine;
-    /**
-     * @exclude
-     */
     public Coroutine currentCoroutine;
 
     private final PrintStream out;
@@ -165,17 +162,15 @@ public class KahluaThread {
         return nReturnValues;
     }
 
-    private final Object prepareMetatableCall(Object o) {
+    private Object prepareMetatableCall(Object o) {
         if (o instanceof JavaFunction || o instanceof LuaClosure) {
             return o;
         }
 
-        Object f = getMetaOp(o, "__call");
-
-        return f;
+        return getMetaOp(o, "__call");
     }
 
-    private final void luaMainloop() {
+    private void luaMainloop() {
         LuaCallFrame callFrame = currentCoroutine.currentCallFrame();
         LuaClosure closure = callFrame.closure;
         Prototype prototype = closure.prototype;
@@ -319,8 +314,8 @@ public class KahluaThread {
                         Object bo = getRegisterOrConstant(callFrame, b, prototype);
                         Object co = getRegisterOrConstant(callFrame, c, prototype);
 
-                        Double bd = null, cd = null;
-                        Object res = null;
+                        Double bd, cd;
+                        Object res;
                         if ((bd = KahluaUtil.rawTonumber(bo)) == null
                                 || (cd = KahluaUtil.rawTonumber(co)) == null) {
                             String meta_op = meta_ops[opcode];
@@ -407,7 +402,7 @@ public class KahluaThread {
                                         nStrings++;
                                     }
                                     if (nStrings > 0) {
-                                        StringBuffer concatBuffer = new StringBuffer();
+                                        StringBuilder concatBuffer = new StringBuilder();
 
                                         int firstString = last - nStrings + 1;
                                         while (firstString <= last) {
@@ -955,7 +950,7 @@ public class KahluaThread {
         return meta.rawget(meta_op);
     }
 
-    private final Object getCompMetaOp(Object a, Object b, String meta_op) {
+    private Object getCompMetaOp(Object a, Object b, String meta_op) {
         KahluaTable meta1 = (KahluaTable) getmetatable(a, true);
         KahluaTable meta2 = (KahluaTable) getmetatable(b, true);
         if (meta1 == null || meta2 == null)
@@ -968,7 +963,7 @@ public class KahluaThread {
         return meta_operator1;
     }
 
-    private final Object getBinMetaOp(Object a, Object b, String meta_op) {
+    private Object getBinMetaOp(Object a, Object b, String meta_op) {
         Object op = getMetaOp(a, meta_op);
         if (op != null) {
             return op;
@@ -976,7 +971,7 @@ public class KahluaThread {
         return getMetaOp(b, meta_op);
     }
 
-    private final Object getRegisterOrConstant(LuaCallFrame callFrame, int index, Prototype prototype) {
+    private Object getRegisterOrConstant(LuaCallFrame callFrame, int index, Prototype prototype) {
         int cindex = index - 256;
         if (cindex < 0) {
             return callFrame.get(index);
@@ -989,23 +984,23 @@ public class KahluaThread {
      * private static final int getA24(int op) { return (op >>> 6); }
      */
 
-    private static final int getA8(int op) {
+    private static int getA8(int op) {
         return (op >>> 6) & 255;
     }
 
-    private static final int getC9(int op) {
+    private static int getC9(int op) {
         return (op >>> 14) & 511;
     }
 
-    private static final int getB9(int op) {
+    private static int getB9(int op) {
         return (op >>> 23) & 511;
     }
 
-    private static final int getBx(int op) {
+    private static int getBx(int op) {
         return (op >>> 14);
     }
 
-    private static final int getSBx(int op) {
+    private static int getSBx(int op) {
         return (op >>> 14) - 131071;
     }
 
@@ -1070,9 +1065,7 @@ public class KahluaThread {
         currentCoroutine.setTop(oldTop + 1 + argslen);
         currentCoroutine.objectStack[oldTop] = fun;
 
-        for (int i = 1; i <= argslen; i++) {
-            currentCoroutine.objectStack[oldTop + i] = args[i - 1];
-        }
+        System.arraycopy(args, 0, currentCoroutine.objectStack, oldTop + 1, argslen);
         int nReturnValues = call(argslen);
 
         Object ret = null;
@@ -1103,8 +1096,7 @@ public class KahluaThread {
                         + curObj);
             }
             if (metaOp instanceof JavaFunction || metaOp instanceof LuaClosure) {
-                Object res = call(metaOp, table, key, null);
-                return res;
+                return call(metaOp, table, key, null);
             } else {
                 curObj = metaOp;
             }
@@ -1230,9 +1222,9 @@ public class KahluaThread {
             currentCallFrame.closeUpvalues(0);
         }
         coroutine.cleanCallFrames(currentCallFrame);
-        if (errorMessage instanceof String) {
-            errorMessage = ((String) errorMessage);
-        }
+//        if (errorMessage instanceof String) {
+//            errorMessage = ((String) errorMessage);
+//        }
         coroutine.setTop(oldBase + 4);
         coroutine.objectStack[oldBase] = Boolean.FALSE;
         coroutine.objectStack[oldBase + 1] = errorMessage;

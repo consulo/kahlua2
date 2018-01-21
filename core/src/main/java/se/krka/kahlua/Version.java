@@ -22,9 +22,6 @@ THE SOFTWARE.
 package se.krka.kahlua;
 
 
-/**
- * @exclude
- */
 public class Version {
     public static final String LUA_VERSION = "lua.version";
     public static final String KAHLUA_MAJOR = "kahlua.major";

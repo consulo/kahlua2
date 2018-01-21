@@ -29,9 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * @exclude
- */
 public final class Prototype {
     public int[] code;
 
@@ -150,13 +147,17 @@ public final class Prototype {
     private static String readLuaString(DataInputStream in, int size_t, boolean littleEndian) throws IOException {
         long len = 0;
 
-        if (size_t == 4) {
-            int i = in.readInt();
-            len = toInt(i, littleEndian);
-        } else if (size_t == 8) {
-            len = toLong(in.readLong(), littleEndian);
-        } else {
-            loadAssert(false, "Bad string size");
+        switch (size_t) {
+            case 4:
+                int i = in.readInt();
+                len = toInt(i, littleEndian);
+                break;
+            case 8:
+                len = toLong(in.readLong(), littleEndian);
+                break;
+            default:
+                loadAssert(false, "Bad string size");
+                break;
         }
 
         if (len == 0) {
@@ -276,8 +277,7 @@ public final class Prototype {
 
 //		Done with header, start reading functions
         Prototype mainPrototype = new Prototype(in, littleEndian, null, size_t);
-        LuaClosure closure = new LuaClosure(mainPrototype, env);
-        return closure;
+        return new LuaClosure(mainPrototype, env);
     }
 
     private static void loadAssert(boolean c, String message) throws IOException {
@@ -340,23 +340,22 @@ public final class Prototype {
 
         int codeLen = code.length;
         dos.writeInt(codeLen);
-        for (int i = 0; i < codeLen; i++) {
-            dos.writeInt(code[i]);
+        for (int aCode : code) {
+            dos.writeInt(aCode);
         }
 
         int constantsLen = constants.length;
         dos.writeInt(constantsLen);
-        for (int i = 0; i < constantsLen; i++) {
-            Object o = constants[i];
+        for (Object o : constants) {
             if (o == null) {
                 dos.write(0);
             } else if (o instanceof Boolean) {
                 dos.write(1);
-                dos.write(((Boolean) o).booleanValue() ? 1 : 0);
+                dos.write((Boolean) o ? 1 : 0);
             } else if (o instanceof Double) {
                 dos.write(3);
                 Double d = (Double) o;
-                dos.writeLong(Double.doubleToLongBits(d.doubleValue()));
+                dos.writeLong(Double.doubleToLongBits(d));
             } else if (o instanceof String) {
                 dos.write(4);
                 dumpString((String) o, dos);
@@ -367,8 +366,8 @@ public final class Prototype {
 
         int prototypesLen = prototypes.length;
         dos.writeInt(prototypesLen);
-        for (int i = 0; i < prototypesLen; i++) {
-            prototypes[i].dumpPrototype(dos);
+        for (Prototype prototype : prototypes) {
+            prototype.dumpPrototype(dos);
         }
 
         // DEBUGGING INFORMATION
@@ -376,8 +375,8 @@ public final class Prototype {
         // read lines
         int linesLen = lines.length;
         dos.writeInt(linesLen);
-        for (int i = 0; i < linesLen; i++) {
-            dos.writeInt(lines[i]);
+        for (int line : lines) {
+            dos.writeInt(line);
         }
 
         // skip locals

@@ -94,8 +94,6 @@ public class LuaCallFrame {
 
     /**
      * This ensures that top is at least as high as index, and that everything from index and up is empty.
-     *
-     * @param index
      */
     public void clearFromIndex(int index) {
         if (getTop() < index) {

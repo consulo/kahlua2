@@ -3,49 +3,22 @@ package se.krka.kahlua.vm;
 import java.io.*;
 
 public class KahluaUtil {
-    /**
-     * @exclude
-     */
     private static final Object WORKER_THREAD_KEY = new Object();
-    /**
-     * @exclude
-     */
     private static final String TYPE_NIL = "nil";
-    /**
-     * @exclude
-     */
     private static final String TYPE_STRING = "string";
-    /**
-     * @exclude
-     */
     private static final String TYPE_NUMBER = "number";
-    /**
-     * @exclude
-     */
     private static final String TYPE_BOOLEAN = "boolean";
-    /**
-     * @exclude
-     */
     private static final String TYPE_FUNCTION = "function";
-    /**
-     * @exclude
-     */
     private static final String TYPE_TABLE = "table";
-    /**
-     * @exclude
-     */
     private static final String TYPE_COROUTINE = "coroutine";
-    /**
-     * @exclude
-     */
     private static final String TYPE_USERDATA = "userdata";
 
     public static double fromDouble(Object o) {
-        return ((Double) o).doubleValue();
+        return (Double) o;
     }
 
     public static Double toDouble(double d) {
-        return new Double(d);
+        return d;
     }
 
     public static Double toDouble(long d) {
@@ -96,7 +69,7 @@ public class KahluaUtil {
     /**
      * Rounds towards even numbers
      *
-     * @param x
+     * @param x The value to round.
      */
     public static double round(double x) {
         if (x < 0) {
@@ -122,7 +95,7 @@ public class KahluaUtil {
         if (exponent <= 0) {
             return 1;
         }
-        long b = 1;
+        long b;
         for (b = (exponent & 1) != 0 ? base : 1, exponent >>= 1; exponent != 0; exponent >>= 1) {
             base *= base;
             if ((exponent & 1) != 0) {
@@ -176,12 +149,12 @@ public class KahluaUtil {
             return "nan";
         }
         if (num.isInfinite()) {
-            if (isNegative(num.doubleValue())) {
+            if (isNegative(num)) {
                 return "-inf";
             }
             return "inf";
         }
-        double n = num.doubleValue();
+        double n = num;
         if (Math.floor(n) == n && Math.abs(n) < 1e14) {
             return String.valueOf(num.longValue());
         }
@@ -236,8 +209,7 @@ public class KahluaUtil {
         if (thread != null) {
             Object tostringFun = thread.getMetaOp(o, "__tostring");
             if (tostringFun != null) {
-                String res = (String) thread.call(tostringFun, o, null, null);
-                return res;
+                return (String) thread.call(tostringFun, o, null, null);
             }
         }
 
@@ -367,6 +339,6 @@ public class KahluaUtil {
     }
 
     public static double getDoubleArg(LuaCallFrame callFrame, int i, String name) {
-        return getNumberArg(callFrame, i, name).doubleValue();
+        return getNumberArg(callFrame, i, name);
     }
 }

@@ -37,7 +37,7 @@ public class CoroutineLib implements JavaFunction {
     private static final String[] names;
 
     // NOTE: Coroutine.class won't work in J2ME - so this is used as a workaround
-    private static final Class COROUTINE_CLASS = new Coroutine().getClass();
+    private static final Class COROUTINE_CLASS = Coroutine.class.getClass();
 
     static {
         names = new String[NUM_FUNCTIONS];
@@ -102,7 +102,7 @@ public class CoroutineLib implements JavaFunction {
 
         // same behaviour as in original lua,
         // return nil if it's the root coroutine
-        if (t.getStatus() != "normal") {
+        if (!t.getStatus().equals("normal")) {
             t = null;
         }
 
@@ -124,7 +124,7 @@ public class CoroutineLib implements JavaFunction {
 
         String status = t.getStatus();
         // equals on strings works because they are both constants
-        if (status != "suspended") {
+        if (!status.equals("suspended")) {
             KahluaUtil.fail(("Can not resume coroutine that is in status: " + status));
         }
 
@@ -177,14 +177,12 @@ public class CoroutineLib implements JavaFunction {
     private LuaClosure getFunction(LuaCallFrame callFrame, String name) {
         Object o = KahluaUtil.getArg(callFrame, 1, name);
         KahluaUtil.luaAssert(o instanceof LuaClosure, "argument must be a lua function");
-        LuaClosure c = (LuaClosure) o;
-        return c;
+        return (LuaClosure) o;
     }
 
     private Coroutine getCoroutine(LuaCallFrame callFrame, String name) {
         Object o = KahluaUtil.getArg(callFrame, 1, name);
         KahluaUtil.luaAssert(o instanceof Coroutine, "argument must be a coroutine");
-        Coroutine t = (Coroutine) o;
-        return t;
+        return (Coroutine) o;
     }
 }

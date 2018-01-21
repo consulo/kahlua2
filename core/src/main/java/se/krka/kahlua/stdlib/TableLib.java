@@ -154,7 +154,7 @@ public final class TableLib implements JavaFunction {
             last = table.len();
         }
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = first; i <= last; i++) {
             if (i > first) {
                 buffer.append(separator);
@@ -246,8 +246,7 @@ public final class TableLib implements JavaFunction {
 
     private static KahluaTable getTable(LuaCallFrame callFrame, int nArguments) {
         KahluaUtil.luaAssert(nArguments >= 1, "expected table, got no arguments");
-        KahluaTable t = (KahluaTable) callFrame.get(0);
-        return t;
+        return (KahluaTable) callFrame.get(0);
     }
 
 }

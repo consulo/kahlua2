@@ -22,9 +22,6 @@ THE SOFTWARE.
 package se.krka.kahlua.vm;
 
 
-/**
- * @exclude
- */
 public final class UpValue {
     // For open upvalues
     private Coroutine coroutine;

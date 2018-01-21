@@ -77,9 +77,6 @@ public final class StringLib implements JavaFunction {
         }
     }
 
-    /**
-     * @exclude
-     */
     private final int methodId;
 
     public StringLib(int index) {
@@ -350,7 +347,7 @@ public final class StringLib implements JavaFunction {
                             Double v = getDoubleArg(callFrame, argc);
                             boolean isNaN = v.isInfinite() || v.isNaN();
 
-                            double vDouble = v.doubleValue();
+                            double vDouble = v;
                             if (KahluaUtil.isNegative(vDouble)) {
                                 if (!isNaN) {
                                     result.append('-');
@@ -383,7 +380,7 @@ public final class StringLib implements JavaFunction {
                             // then check which formatting to be used.
                             Double v = getDoubleArg(callFrame, argc);
                             boolean isNaN = v.isInfinite() || v.isNaN();
-                            double vDouble = v.doubleValue();
+                            double vDouble = v;
                             if (KahluaUtil.isNegative(vDouble)) {
                                 if (!isNaN) {
                                     result.append('-');
@@ -535,8 +532,6 @@ public final class StringLib implements JavaFunction {
      * @param sb        the stringbuffer to append to
      * @param value     the value to append
      * @param base      the base to use when formatting (typically 8, 10 or 16)
-     * @param printZero
-     * @param minDigits
      */
     private static void stringBufferAppend(StringBuffer sb, double value, int base, boolean printZero, int minDigits) {
         int startPos = sb.length();
@@ -567,11 +562,6 @@ public final class StringLib implements JavaFunction {
 
     /**
      * Only works with non-negative numbers
-     *
-     * @param buffer
-     * @param number
-     * @param precision
-     * @param requirePeriod
      */
     private void appendPrecisionNumber(StringBuffer buffer, double number, int precision, boolean requirePeriod) {
         number = roundToPrecision(number, precision);
@@ -594,11 +584,6 @@ public final class StringLib implements JavaFunction {
 
     /**
      * Only works with non-negative numbers
-     *
-     * @param buffer
-     * @param number
-     * @param significantDecimals
-     * @param includeTrailingZeros
      */
     private void appendSignificantNumber(StringBuffer buffer, double number, int significantDecimals, boolean includeTrailingZeros) {
         double iPart = Math.floor(number);
@@ -762,7 +747,7 @@ public final class StringLib implements JavaFunction {
     }
 
     private int stringChar(LuaCallFrame callFrame, int nArguments) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nArguments; i++) {
             int num = getDoubleArg(callFrame, i + 1, names[CHAR]).intValue();
             sb.append((char) num);
@@ -772,10 +757,10 @@ public final class StringLib implements JavaFunction {
 
     private int sub(LuaCallFrame callFrame, int nArguments) {
         String s = getStringArg(callFrame, 1, names[SUB]);
-        double start = getDoubleArg(callFrame, 2, names[SUB]).doubleValue();
+        double start = getDoubleArg(callFrame, 2, names[SUB]);
         double end = -1;
         if (nArguments >= 3) {
-            end = getDoubleArg(callFrame, 3, names[SUB]).doubleValue();
+            end = getDoubleArg(callFrame, 3, names[SUB]);
         }
         String res;
         int istart = (int) start;
@@ -873,7 +858,7 @@ public final class StringLib implements JavaFunction {
                 return null;
             }
             if (capture[i].len == CAP_POSITION) {
-                return new Double(src_init.length() - capture[i].init.length() + 1);
+                return (double) (src_init.length() - capture[i].init.length() + 1);
             } else {
                 return capture[i].init.getStringSubString(capture[i].len);
             }
@@ -986,7 +971,7 @@ public final class StringLib implements JavaFunction {
             if (l == CAP_UNFINISHED) {
                 throw new RuntimeException("unfinished capture");
             } else if (l == CAP_POSITION) {
-                Double res = new Double(ms.src_init.length() - ms.capture[i].init.length() + 1);
+                Double res = (double) (ms.src_init.length() - ms.capture[i].init.length() + 1);
                 ms.callFrame.push(res);
                 return res;
             } else {
@@ -1060,7 +1045,7 @@ public final class StringLib implements JavaFunction {
                 ms.level = 0;
                 if ((res = match(ms, s1, p)) != null) {
                     if (find) {
-                        return callFrame.push(new Double(s.length() - s1.length() + 1), new Double(s.length() - res.length())) +
+                        return callFrame.push((double) (s.length() - s1.length() + 1), new Double(s.length() - res.length())) +
                                 push_captures(ms, null, null);
                     } else {
                         return push_captures(ms, s1, res);
@@ -1382,7 +1367,6 @@ public final class StringLib implements JavaFunction {
 
                         p = ep;
                         isContinue = true;
-                        continue; // else return match(ms, s+1, ep);
                     }
                 }
             }
@@ -1504,7 +1488,7 @@ public final class StringLib implements JavaFunction {
                 break;
             }
         }
-        return cf.push(b.append(src.getString()).toString(), new Double(n));
+        return cf.push(b.append(src.getString()).toString(), (double) n);
     }
 
     private static void addValue(MatchState ms, Object repl, StringBuffer b, StringPointer src, StringPointer e) {
@@ -1519,7 +1503,7 @@ public final class StringLib implements JavaFunction {
             } else {
                 match = src.getStringSubString(e.getIndex() - src.getIndex());
             }
-            Object res = null;
+            Object res;
             if (repl instanceof KahluaTable) {
                 res = ((KahluaTable) repl).rawget(match);
             } else {
@@ -1534,7 +1518,7 @@ public final class StringLib implements JavaFunction {
 
     private static String addString(MatchState ms, String repl, StringPointer s, StringPointer e) {
         StringPointer replStr = new StringPointer(repl);
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < repl.length(); i++) {
             char c = replStr.getChar(i);
             if (c != L_ESC) {

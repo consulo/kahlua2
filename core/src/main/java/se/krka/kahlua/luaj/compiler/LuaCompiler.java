@@ -95,9 +95,7 @@ public class LuaCompiler implements JavaFunction {
             }
             KahluaUtil.fail("Invalid type to loadstream: " + input.getClass());
             return 0;
-        } catch (RuntimeException e) {
-            return callFrame.push(null, e.getMessage());
-        } catch (IOException e) {
+        } catch (RuntimeException | IOException e) {
             return callFrame.push(null, e.getMessage());
         }
     }
@@ -112,9 +110,7 @@ public class LuaCompiler implements JavaFunction {
                 name = (String) callFrame.get(1);
             }
             return callFrame.push(loadstring(source, name, callFrame.getEnvironment()));
-        } catch (RuntimeException e) {
-            return callFrame.push(null, e.getMessage());
-        } catch (IOException e) {
+        } catch (RuntimeException | IOException e) {
             return callFrame.push(null, e.getMessage());
         }
     }

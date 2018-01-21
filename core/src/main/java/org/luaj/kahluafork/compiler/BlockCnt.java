@@ -1,8 +1,5 @@
 package org.luaj.kahluafork.compiler;
 
-/**
- * @exclude
- */
 public class BlockCnt {
     BlockCnt previous;  /* chain */
     int breaklist;  /* list of jumps out of this loop */

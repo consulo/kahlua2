@@ -144,7 +144,7 @@ public class OsLib implements JavaFunction {
 
     public static Object getdate(String format, long time, Platform platform) {
         //boolean universalTime = format.startsWith("!");
-        Calendar calendar = null;
+        Calendar calendar;
         int si = 0;
         if (format.charAt(si) == '!') { // UTC?
             calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -182,7 +182,7 @@ public class OsLib implements JavaFunction {
 
     public static String formatTime(String format, Calendar cal) {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int stringIndex = 0; stringIndex < format.length(); stringIndex++) {
             if (format.charAt(stringIndex) != '%' || stringIndex + 1 == format.length()) { // no conversion specifier?
                 buffer.append(format.charAt(stringIndex));

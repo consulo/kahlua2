@@ -1,24 +1,25 @@
-/*******************************************************************************
- * Copyright (c) 2007 LuaJ. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- ******************************************************************************/
+/*
+ Copyright (c) 2018 Kristofer Karlsson <kristofer.karlsson@gmail.com>
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+
 package org.luaj.kahluafork.compiler;
 
 import java.io.IOException;
@@ -31,9 +32,6 @@ import se.krka.kahlua.vm.KahluaException;
 import se.krka.kahlua.vm.Prototype;
 
 
-/**
- * @exclude
- */
 public class LexState {
 
     public int nCcalls;
@@ -57,8 +55,10 @@ public class LexState {
     private static final Hashtable RESERVED_LOCAL_VAR_KEYWORDS_TABLE = new Hashtable();
 
     static {
-        for (int i = 0; i < RESERVED_LOCAL_VAR_KEYWORDS.length; i++)
-            RESERVED_LOCAL_VAR_KEYWORDS_TABLE.put(RESERVED_LOCAL_VAR_KEYWORDS[i], Boolean.TRUE);
+        for (String RESERVED_LOCAL_VAR_KEYWORD : RESERVED_LOCAL_VAR_KEYWORDS) {
+            RESERVED_LOCAL_VAR_KEYWORDS_TABLE.put(RESERVED_LOCAL_VAR_KEYWORD, Boolean.TRUE);
+
+        }
     }
 
     private static final int EOZ = (-1);
@@ -67,11 +67,11 @@ public class LexState {
     private static final int UCHAR_MAX = 255; // TODO, convert to unicode CHAR_MAX?
     private static final int LUAI_MAXCCALLS = 200;
 
-    private static final String LUA_QS(String s) {
+    private static String LUA_QS(String s) {
         return "'" + s + "'";
     }
 
-    private static final String LUA_QL(Object o) {
+    private static String LUA_QL(Object o) {
         return LUA_QS(String.valueOf(o));
     }
 
@@ -158,7 +158,7 @@ public class LexState {
     static {
         for (int i = 0; i < NUM_RESERVED; i++) {
             String ts = luaX_tokens[i];
-            RESERVED.put(ts, new Integer(FIRST_RESERVED + i));
+            RESERVED.put(ts, FIRST_RESERVED + i);
         }
     }
 
@@ -248,7 +248,7 @@ public class LexState {
     String token2str(int token) {
         if (token < FIRST_RESERVED) {
             return iscntrl(token) ?
-                    "char(" + ((int) token) + ")" :
+                    "char(" + token + ")" :
                     String.valueOf((char) token);
         } else {
             return luaX_tokens[token - FIRST_RESERVED];
@@ -294,8 +294,7 @@ public class LexState {
 
     String newstring(byte[] chars, int offset, int len) {
         try {
-            String s = new String(chars, offset, len, "UTF-8");
-            return s;
+            return new String(chars, offset, len, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
@@ -619,7 +618,6 @@ public class LexState {
                     if (isspace(current)) {
                         FuncState._assert(!currIsNewline());
                         nextChar();
-                        continue;
                     } else if (isdigit(current)) {
                         read_numeral(token);
                         return TK_NUMBER;
@@ -631,7 +629,7 @@ public class LexState {
                         } while (isalnum(current) || current == '_');
                         ts = newstring(buff, 0, nbuff);
                         if (RESERVED.containsKey(ts))
-                            return ((Integer) RESERVED.get(ts)).intValue();
+                            return ((Integer) RESERVED.get(ts));
                         else {
                             token.ts = ts;
                             return TK_NAME;
@@ -963,7 +961,7 @@ public class LexState {
             e++;
         }
         if (x < 8) return x;
-        else return ((e + 1) << 3) | (((int) x) - 8);
+        else return ((e + 1) << 3) | (x - 8);
     }
 
 
@@ -1101,7 +1099,6 @@ public class LexState {
             }
             default: {
                 this.syntaxerror("unexpected symbol");
-                return;
             }
         }
     }

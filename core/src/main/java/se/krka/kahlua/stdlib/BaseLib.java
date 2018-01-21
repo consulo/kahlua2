@@ -55,7 +55,7 @@ public final class BaseLib implements JavaFunction {
     private static final int NUM_FUNCTIONS = 18;
 
     private static final String[] names;
-    private static final Object DOUBLE_ONE = new Double(1.0);
+    private static final Object DOUBLE_ONE = 1.0;
 
     private static final BaseLib[] functions;
 
@@ -207,7 +207,7 @@ public final class BaseLib implements JavaFunction {
         KahluaTable newEnv = (KahluaTable) callFrame.get(1);
         KahluaUtil.luaAssert(newEnv != null, "expected a table");
 
-        LuaClosure closure = null;
+        LuaClosure closure;
 
         Object o = callFrame.get(0);
         if (o instanceof LuaClosure) {
@@ -239,7 +239,7 @@ public final class BaseLib implements JavaFunction {
             o = callFrame.get(0);
         }
 
-        Object res = null;
+        Object res;
         if (o == null || o instanceof JavaFunction) {
             res = callFrame.coroutine.environment;
         } else if (o instanceof LuaClosure) {
@@ -317,7 +317,7 @@ public final class BaseLib implements JavaFunction {
         KahluaThread thread = callFrame.getThread();
         KahluaTable env = thread.getEnvironment();
         Object toStringFun = thread.tableGet(env, "tostring");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nArguments; i++) {
             if (i > 0) {
                 sb.append("\t");
@@ -344,8 +344,7 @@ public final class BaseLib implements JavaFunction {
         double d_index = KahluaUtil.fromDouble(d_indexDouble);
         int index = (int) d_index;
         if (index >= 1 && index <= (nArguments - 1)) {
-            int nResults = nArguments - index;
-            return nResults;
+            return nArguments - index;
         }
         return 0;
     }
@@ -478,9 +477,6 @@ public final class BaseLib implements JavaFunction {
         return callFrame.push("Could not find the bytecode for '" + modname + "' in classpath");
     }
 
-    /**
-     * @exclude
-     */
     public static boolean luaEquals(Object a, Object b) {
         if (a == null || b == null) {
             return a == b;

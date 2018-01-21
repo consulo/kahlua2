@@ -83,7 +83,7 @@ public class Coroutine {
         setCallFrameStackTop(callFrameTop - 1);
     }
 
-    private final void ensureCallFrameStackSize(int index) {
+    private void ensureCallFrameStackSize(int index) {
         if (index > MAX_CALL_FRAME_STACK_SIZE) {
             throw new RuntimeException("Stack overflow");
         }
@@ -118,7 +118,7 @@ public class Coroutine {
         }
     }
 
-    private final void ensureStacksize(int index) {
+    private void ensureStacksize(int index) {
         if (index > MAX_STACK_SIZE) {
             throw new RuntimeException("Stack overflow");
         }
@@ -222,7 +222,7 @@ public class Coroutine {
         if (count < 0) {
             count = 0;
         }
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = callFrameTop - 1 - level; i >= haltAt; i--) {
             if (count-- <= 0) {
                 break;
@@ -371,9 +371,6 @@ public class Coroutine {
         return callFrameStack[index];
     }
 
-    /**
-     * @exclude
-     */
     public static void yieldHelper(LuaCallFrame callFrame, LuaCallFrame argsCallFrame, int nArguments) {
         KahluaUtil.luaAssert(callFrame.canYield, "Can not yield outside of a coroutine");
 

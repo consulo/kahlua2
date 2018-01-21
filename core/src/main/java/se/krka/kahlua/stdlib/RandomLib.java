@@ -5,7 +5,7 @@ import se.krka.kahlua.vm.*;
 import java.util.Random;
 
 public class RandomLib implements JavaFunction {
-    private static final Class RANDOM_CLASS = new Random().getClass();
+    private static final Class RANDOM_CLASS = Random.class.getClass();
 
     private static final int RANDOM = 0;
     private static final int RANDOMSEED = 1;

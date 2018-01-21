@@ -1,24 +1,25 @@
-/*******************************************************************************
- * Copyright (c) 2007 LuaJ. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- ******************************************************************************/
+/*
+ Copyright (c) 2018 Kristofer Karlsson <kristofer.karlsson@gmail.com>
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+
 package org.luaj.kahluafork.compiler;
 
 import se.krka.kahlua.vm.KahluaException;
@@ -27,9 +28,6 @@ import se.krka.kahlua.vm.Prototype;
 import java.util.Hashtable;
 
 
-/**
- * @exclude
- */
 public class FuncState {
 
     private static final Object NULL_OBJECT = new Object();
@@ -249,7 +247,7 @@ public class FuncState {
         if (hasmultret(cc.v.k)) {
             this.setmultret(cc.v);
             this.setlist(cc.t.info, cc.na, LUA_MULTRET);
-            cc.na--;  /** do not count last expression (unknown number of elements) */
+            cc.na--;  /* do not count last expression (unknown number of elements) */
         } else {
             if (cc.v.k != LexState.VVOID)
                 this.exp2nextreg(cc.v);
@@ -453,10 +451,10 @@ public class FuncState {
     int addk(Object v) {
         int idx;
         if (this.htable.containsKey(v)) {
-            idx = ((Integer) htable.get(v)).intValue();
+            idx = (Integer) htable.get(v);
         } else {
             idx = this.nk;
-            this.htable.put(v, new Integer(idx));
+            this.htable.put(v, idx);
             final Prototype f = this.f;
             if (f.constants == null || nk + 1 >= f.constants.length)
                 f.constants = realloc(f.constants, nk * 2 + 1);
@@ -473,7 +471,7 @@ public class FuncState {
     }
 
     int numberK(double r) {
-        return this.addk(new Double(r));
+        return this.addk(r);
     }
 
     int boolK(boolean b) {
@@ -879,9 +877,7 @@ public class FuncState {
     }
 
     void codearith(int op, ExpDesc e1, ExpDesc e2) {
-        if (constfolding(op, e1, e2))
-            return;
-        else {
+        if (!constfolding(op, e1, e2)) {
             int o2 = (op != OP_UNM && op != OP_LEN) ? this.exp2RK(e2)
                     : 0;
             int o1 = this.exp2RK(e1);
@@ -1135,14 +1131,14 @@ public class FuncState {
     }
 
     static int CREATE_ABC(int o, int a, int b, int c) {
-        return ((o << POS_OP) & MASK_OP) |
+        return ((o) & MASK_OP) |
                 ((a << POS_A) & MASK_A) |
                 ((b << POS_B) & MASK_B) |
                 ((c << POS_C) & MASK_C);
     }
 
     static int CREATE_ABx(int o, int a, int bc) {
-        return ((o << POS_OP) & MASK_OP) |
+        return ((o) & MASK_OP) |
                 ((a << POS_A) & MASK_A) |
                 ((bc << POS_Bx) & MASK_Bx);
     }
@@ -1247,7 +1243,7 @@ public class FuncState {
     public static final int MAXARG_Bx = ((1 << SIZE_Bx) - 1);
     public static final int MAXARG_sBx = (MAXARG_Bx >> 1);        /* `sBx' is signed */
 
-    public static final int MASK_OP = ((1 << SIZE_OP) - 1) << POS_OP;
+    public static final int MASK_OP = ((1 << SIZE_OP) - 1);
     public static final int MASK_A = ((1 << SIZE_A) - 1) << POS_A;
     public static final int MASK_B = ((1 << SIZE_B) - 1) << POS_B;
     public static final int MASK_C = ((1 << SIZE_C) - 1) << POS_C;
@@ -1263,7 +1259,7 @@ public class FuncState {
      ** the following macros help to manipulate instructions
      */
     public static int GET_OPCODE(int i) {
-        return (i >> POS_OP) & MAX_OP;
+        return (i) & MAX_OP;
     }
 
     public static int GETARG_A(int i) {
@@ -1307,7 +1303,7 @@ public class FuncState {
      * gets the index of the constant
      */
     public static int INDEXK(int r) {
-        return ((int) (r) & ~BITRK);
+        return (r & ~BITRK);
     }
 
     public static final int MAXINDEXRK = (BITRK - 1);
@@ -1432,44 +1428,44 @@ public class FuncState {
 
     public static final int[] luaP_opmodes = {
             /*   T        A           B             C          mode		   opcode	*/
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iABC),        /* OP_MOVE */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgN << 2) | (iABx),        /* OP_LOADK */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_LOADBOOL */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iABC),        /* OP_LOADNIL */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgN << 2) | (iABC),        /* OP_GETUPVAL */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgN << 2) | (iABx),        /* OP_GETGLOBAL */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgK << 2) | (iABC),        /* OP_GETTABLE */
-            (0 << 7) | (0 << 6) | (OpArgK << 4) | (OpArgN << 2) | (iABx),        /* OP_SETGLOBAL */
-            (0 << 7) | (0 << 6) | (OpArgU << 4) | (OpArgN << 2) | (iABC),        /* OP_SETUPVAL */
-            (0 << 7) | (0 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_SETTABLE */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_NEWTABLE */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgK << 2) | (iABC),        /* OP_SELF */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_ADD */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_SUB */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_MUL */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_DIV */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_MOD */
-            (0 << 7) | (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_POW */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iABC),        /* OP_UNM */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iABC),        /* OP_NOT */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iABC),        /* OP_LEN */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgR << 2) | (iABC),        /* OP_CONCAT */
-            (0 << 7) | (0 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iAsBx),        /* OP_JMP */
-            (1 << 7) | (0 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_EQ */
-            (1 << 7) | (0 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_LT */
-            (1 << 7) | (0 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_LE */
-            (1 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgU << 2) | (iABC),        /* OP_TEST */
-            (1 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgU << 2) | (iABC),        /* OP_TESTSET */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_CALL */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_TAILCALL */
-            (0 << 7) | (0 << 6) | (OpArgU << 4) | (OpArgN << 2) | (iABC),        /* OP_RETURN */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iAsBx),        /* OP_FORLOOP */
-            (0 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgN << 2) | (iAsBx),        /* OP_FORPREP */
-            (1 << 7) | (0 << 6) | (OpArgN << 4) | (OpArgU << 2) | (iABC),        /* OP_TFORLOOP */
-            (0 << 7) | (0 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_SETLIST */
-            (0 << 7) | (0 << 6) | (OpArgN << 4) | (OpArgN << 2) | (iABC),        /* OP_CLOSE */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgN << 2) | (iABx),        /* OP_CLOSURE */
-            (0 << 7) | (1 << 6) | (OpArgU << 4) | (OpArgN << 2) | (iABC),        /* OP_VARARG */
+            (1 << 6) | (OpArgR << 4) | (0) | (iABC),        /* OP_MOVE */
+            (1 << 6) | (OpArgK << 4) | (0) | (iABx),        /* OP_LOADK */
+            (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_LOADBOOL */
+            (1 << 6) | (OpArgR << 4) | (0) | (iABC),        /* OP_LOADNIL */
+            (1 << 6) | (OpArgU << 4) | (0) | (iABC),        /* OP_GETUPVAL */
+            (1 << 6) | (OpArgK << 4) | (0) | (iABx),        /* OP_GETGLOBAL */
+            (1 << 6) | (OpArgR << 4) | (OpArgK << 2) | (iABC),        /* OP_GETTABLE */
+            (0) | (OpArgK << 4) | (0) | (iABx),        /* OP_SETGLOBAL */
+            (0) | (OpArgU << 4) | (0) | (iABC),        /* OP_SETUPVAL */
+            (0) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_SETTABLE */
+            (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_NEWTABLE */
+            (1 << 6) | (OpArgR << 4) | (OpArgK << 2) | (iABC),        /* OP_SELF */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_ADD */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_SUB */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_MUL */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_DIV */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_MOD */
+            (1 << 6) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_POW */
+            (1 << 6) | (OpArgR << 4) | (0) | (iABC),        /* OP_UNM */
+            (1 << 6) | (OpArgR << 4) | (0) | (iABC),        /* OP_NOT */
+            (1 << 6) | (OpArgR << 4) | (0) | (iABC),        /* OP_LEN */
+            (1 << 6) | (OpArgR << 4) | (OpArgR << 2) | (iABC),        /* OP_CONCAT */
+            (0) | (OpArgR << 4) | (0) | (iAsBx),        /* OP_JMP */
+            (1 << 7) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_EQ */
+            (1 << 7) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_LT */
+            (1 << 7) | (OpArgK << 4) | (OpArgK << 2) | (iABC),        /* OP_LE */
+            (1 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgU << 2),        /* OP_TEST */
+            (1 << 7) | (1 << 6) | (OpArgR << 4) | (OpArgU << 2),        /* OP_TESTSET */
+            (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_CALL */
+            (1 << 6) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_TAILCALL */
+            (0) | (OpArgU << 4) | (0) | (iABC),        /* OP_RETURN */
+            (1 << 6) | (OpArgR << 4) | (0) | (iAsBx),        /* OP_FORLOOP */
+            (1 << 6) | (OpArgR << 4) | (0) | (iAsBx),        /* OP_FORPREP */
+            (1 << 7) | (0) | (OpArgU << 2) | (iABC),        /* OP_TFORLOOP */
+            (0) | (OpArgU << 4) | (OpArgU << 2) | (iABC),        /* OP_SETLIST */
+            (0) | (0) | (0) | (iABC),        /* OP_CLOSE */
+            (1 << 6) | (OpArgU << 4) | (0) | (iABx),        /* OP_CLOSURE */
+            (1 << 6) | (OpArgU << 4) | (0) | (iABC),        /* OP_VARARG */
     };
 
     public static int getOpMode(int m) {

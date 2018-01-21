@@ -1065,7 +1065,10 @@ public class KahluaThread {
         currentCoroutine.setTop(oldTop + 1 + argslen);
         currentCoroutine.objectStack[oldTop] = fun;
 
-        System.arraycopy(args, 0, currentCoroutine.objectStack, oldTop + 1, argslen);
+        for (int i = 1; i <= argslen; i++) {
+            currentCoroutine.objectStack[oldTop + i] = args[i - 1];
+        }
+
         int nReturnValues = call(argslen);
 
         Object ret = null;

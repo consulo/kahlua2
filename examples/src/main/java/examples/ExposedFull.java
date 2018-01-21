@@ -20,13 +20,11 @@
  THE SOFTWARE.
  */
 
-package se.krka.kahlua.j2se.examples;
+package examples;
 
 import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.integration.LuaCaller;
-import se.krka.kahlua.integration.annotations.LuaMethod;
 import se.krka.kahlua.integration.expose.LuaJavaClassExposer;
-import se.krka.kahlua.integration.expose.ReturnValues;
 import se.krka.kahlua.j2se.J2SEPlatform;
 import se.krka.kahlua.luaj.compiler.LuaCompiler;
 import se.krka.kahlua.vm.KahluaTable;
@@ -35,7 +33,6 @@ import se.krka.kahlua.vm.LuaClosure;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ExposedFull {
 	private final KahluaConverterManager converterManager = new KahluaConverterManager();

@@ -25,10 +25,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>krka</groupId>
     <artifactId>cldc11</artifactId>
     <version>1.0.0</version>
-
-    
+    <dependencies>
+        <dependency>
+            <groupId>java</groupId>
+            <artifactId>cldcapi</artifactId>
+            <version>1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cldcapi11.jar</systemPath>
+        </dependency>
+    </dependencies>
 </project>

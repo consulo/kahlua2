@@ -20,7 +20,7 @@
  THE SOFTWARE.
  */
 
-package se.krka.kahlua.j2se.examples;
+package examples;
 
 import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.integration.LuaCaller;

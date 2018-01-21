@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -20,7 +19,31 @@
       <entry name="?*.lbc" />
       <entry name="?*.lua" />
     </wildcardResourcePatterns>
-    <annotationProcessing enabled="false" useClasspath="true" />
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cldc11" />
+        <module name="contrib" />
+        <module name="core" />
+        <module name="examples" />
+        <module name="interpreter" />
+        <module name="j2se" />
+        <module name="javadoc" />
+        <module name="testsuite" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cldc11" target="1.7" />
+      <module name="contrib" target="1.7" />
+      <module name="core" target="1.5" />
+      <module name="examples" target="1.5" />
+      <module name="interpreter" target="1.5" />
+      <module name="j2se" target="1.6" />
+      <module name="javadoc" target="1.5" />
+      <module name="kahlua2" target="1.7" />
+      <module name="testsuite" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
-

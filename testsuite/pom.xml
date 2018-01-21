@@ -29,6 +29,13 @@
     <groupId>krka</groupId>
     <artifactId>testsuite</artifactId>
     <version>1.0.0</version>
+    <dependencies>
+        <dependency>
+            <groupId>krka</groupId>
+            <artifactId>j2se</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 
-    
+
 </project>

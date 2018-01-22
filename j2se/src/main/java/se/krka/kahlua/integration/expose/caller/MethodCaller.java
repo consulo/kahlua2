@@ -22,21 +22,31 @@
 
 package se.krka.kahlua.integration.expose.caller;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import se.krka.kahlua.integration.expose.ReturnValues;
 import se.krka.kahlua.integration.processor.DescriptorUtil;
 
-/**
- * @exclude
- */
 public class MethodCaller extends AbstractCaller {
+
+    public static boolean DEBUG = false;
 
     private final Method method;
     private final Object owner;
     private final boolean hasSelf;
     private final boolean hasReturnValue;
+    private boolean isStatic = false;
+    private String methodName;
+    private Class<?>[] methodParameters;
+    private MethodType methodType;
+    private MethodHandle methodHandle;
+    private MethodHandles.Lookup lookup = MethodHandles.lookup();
+    private Object[] parameterCache;
 
     public MethodCaller(Method method, Object owner, boolean hasSelf) {
         super(method.getParameterTypes());
@@ -44,7 +54,32 @@ public class MethodCaller extends AbstractCaller {
         this.owner = owner;
         this.hasSelf = hasSelf;
         method.setAccessible(true);
+        // New Method invocation.
+        methodName = method.getName();
+        methodParameters = method.getParameterTypes();
+        isStatic = Modifier.isStatic(method.getModifiers());
+        Class classMethodDecl = owner != null ? owner.getClass() : method.getDeclaringClass();
+        if (DEBUG) {
+            System.out.print("Registering MethodCaller: " + classMethodDecl.getSimpleName() + "."
+                    + methodName + (methodParameters.length > 0 ? " ::" : ""));
+            for (int index = 0; index < methodParameters.length; index++) {
+                Class param = methodParameters[index];
+                System.out.print(" (" + index + "): (" + param.getSimpleName() + ")");
+            }
+            System.out.print("\n");
+        }
+        methodType = MethodType.methodType(method.getReturnType(), methodParameters);
+        try {
+            methodHandle = lookup.unreflect(method);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
+        if (!isStatic && methodParameters.length > 0) {
+            parameterCache = new Object[methodParameters.length + 1];
+        }
+
+        // End.
         hasReturnValue = !method.getReturnType().equals(Void.TYPE);
         if (hasReturnValue && needsMultipleReturnValues()) {
             throw new IllegalArgumentException("Must have a void return type if first argument is a ReturnValues: got: " + method.getReturnType());
@@ -56,7 +91,48 @@ public class MethodCaller extends AbstractCaller {
         if (!hasSelf) {
             self = owner;
         }
-        Object ret = method.invoke(self, params);
+        // Old Method invocation.
+        // Object ret = method.invoke(self, params);
+        //
+        // New Method invocation.
+        Object ret = null;
+        try {
+            if (isStatic) {
+                if (params.length == 0) {
+                    ret = methodHandle.invoke();
+                } else {
+                    ret = methodHandle.invokeWithArguments(params);
+                }
+            } else {
+                if (params.length == 0) {
+                    ret = methodHandle.invoke(self);
+                } else {
+                    parameterCache[0] = self;
+                    System.arraycopy(params, 0, parameterCache, 1, parameterCache.length - 1);
+                    ret = methodHandle.invokeWithArguments(parameterCache);
+                }
+            }
+        } catch (Throwable throwable) {
+            System.out.println("Method: " + methodName + " static = " + isStatic);
+            System.out.println("Arguments: ");
+            for (int index = 0; index < params.length; index++) {
+                Object param = params[index];
+                if (param != null) {
+                    System.out.println("\t(" + index + "): (" + param.getClass().getSimpleName() + ") = " + param.toString());
+                } else {
+                    System.out.println("\t(" + index + "): (NULL)");
+                }
+            }
+            throwable.printStackTrace();
+        } finally {
+            // Clear the argument cache if one exists.
+            if (parameterCache != null && parameterCache.length > 0) {
+                for (int index = 0; index < parameterCache.length; index++) {
+                    parameterCache[index] = null;
+                }
+            }
+        }
+        // End.
         if (hasReturnValue) {
             rv.push(ret);
         }
